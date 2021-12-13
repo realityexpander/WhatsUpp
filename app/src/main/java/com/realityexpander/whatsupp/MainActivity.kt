@@ -1,5 +1,7 @@
 package com.realityexpander.whatsupp
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
@@ -85,5 +87,9 @@ class MainActivity : AppCompatActivity() {
                 return fragment
             }
         }
+    }
+
+    companion object {
+        fun newIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 }

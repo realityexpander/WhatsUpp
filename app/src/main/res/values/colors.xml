@@ -8,7 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="colorPrimary">#085f57</color>
-    <color name="colorPrimaryDark">#064c44</color>
-    <color name="colorAccent">#22c55</color>
+    <color name="blue">#0000FF</color>
+    <color name="red">#FF0000</color>
+    <color name="grey">#CCCCCC</color>
+    <color name="transparent_white">#CCFFFFFF</color>
+    <color name="transparent_grey">#99CCCCCC</color>
+
+    <color name="colorPrimary">#FF085f57</color>
+    <color name="colorPrimaryDark">#FF064c44</color>
+    <color name="colorAccent">#FFF22c55</color>
 </resources>

@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             savedInstanceState: Bundle?,
         ): View? {
             dataBind = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
-            dataBind.sectionLabel.text = "Hello from section ${arguments?.getInt(ARG_SECTION_NUMBER)}"
+            "Hello from section ${arguments?.getInt(ARG_SECTION_NUMBER)}".also { dataBind.sectionLabel.text = it }
             return dataBind.root
         }
 

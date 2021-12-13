@@ -21,4 +21,23 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="StandardButton">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:background">@drawable/standard_button_rounded</item>
+        <item name="android:textColor">@color/design_default_color_on_primary</item>
+        <item name="android:textSize">@dimen/standard_text_size</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="Text">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Linktext" parent="Text">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

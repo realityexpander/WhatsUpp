@@ -8,15 +8,108 @@
             android:layout_height="match_parent"
             tools:context=".LoginActivity">
 
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onClick"
-                android:text="Go To Signup"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="@dimen/grid_2x"
+                        android:contentDescription="@string/text_content_description_whatsapp_logo"
+                        android:src="@drawable/title" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/emailTIL"
+                        android:layout_width="@dimen/standard_width"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/imageView"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="@dimen/grid_3x">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/emailET"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_email"
+                            android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/passwordTIL"
+                        android:layout_width="@dimen/standard_width"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/emailTIL"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="@dimen/grid_3x">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/passwordET"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_password"
+                            android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                        android:id="@+id/loginBtn"
+                        style="@style/StandardButton"
+                        android:layout_width="@dimen/standard_width"
+                        android:layout_height="@dimen/standard_height"
+                        android:layout_below="@id/passwordTIL"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="@dimen/grid_3x"
+                        android:layout_marginTop="@dimen/grid_3x"
+                        android:layout_marginEnd="@dimen/grid_3x"
+                        android:layout_marginBottom="@dimen/grid_3x"
+                        android:onClick="onLogin"
+                        android:text="@string/button_login" />
+
+                <TextView
+                        android:id="@+id/signupTv"
+                        style="@style/Linktext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/loginBtn"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/grid_3x"
+                        android:layout_marginTop="@dimen/grid_3x"
+                        android:layout_marginEnd="@dimen/grid_3x"
+                        android:layout_marginBottom="@dimen/grid_3x"
+                        android:clickable="true"
+                        android:onClick="onSignup"
+                        android:text="@string/text_signup" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/progressLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/transparent_grey"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="parent"
+                        android:visibility="gone">
+
+
+                    <ProgressBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </RelativeLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,17 +11,20 @@
         <activity
                 android:name=".MainActivity"
                 android:exported="false"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar"/>
         <activity
                 android:name=".SignupActivity"
                 android:exported="false"
+                android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar"
-                android:screenOrientation="portrait" />
+                android:windowSoftInputMode="adjustResize" />
         <activity
                 android:name=".LoginActivity"
                 android:exported="true"
                 android:screenOrientation="portrait"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme.NoActionBar"
+                android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

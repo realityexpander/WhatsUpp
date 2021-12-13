@@ -5,6 +5,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import com.realityexpander.whatsupp.databinding.ActivityLoginBinding
 import com.realityexpander.whatsupp.databinding.ActivityMainBinding
 
@@ -17,12 +19,17 @@ class LoginActivity : AppCompatActivity() {
         setContentView(bind.root)
     }
 
-    fun onClick(v: View) {
+    fun onSignup(v: View) {
         startActivity(SignupActivity.newIntent(this))
         finish()
+    }
+
+    fun onLogin(v: View) {
+        Toast.makeText(v.context, "Log in", Toast.LENGTH_SHORT).show()
     }
 
     companion object {
         fun newIntent(context: Context) = Intent(context, LoginActivity::class.java)
     }
+
 }

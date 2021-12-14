@@ -11,12 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.realityexpander.whatsupp.databinding.ActivityMainBinding
 import com.realityexpander.whatsupp.databinding.FragmentMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bind: ActivityMainBinding
     private var sectionPagerAdapter: SectionPagerAdapter? = null
+
+    private val firebaseAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +45,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item?.itemId
-        if(id == R.id.action_settings) {
-            return true
+        when(item.itemId) {
+            R.id.action_logout -> onLogout()
         }
 
         return true
     }
+
+    fun onLogout() {
+        firebaseAuth.signOut()
+        startActivity(LoginActivity.newIntent(this))
+        finish()
+    }
+
 
     inner class SectionPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
@@ -88,6 +98,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     companion object {
         fun newIntent(context: Context) = Intent(context, MainActivity::class.java)

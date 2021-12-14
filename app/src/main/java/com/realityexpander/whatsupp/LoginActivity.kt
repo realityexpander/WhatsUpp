@@ -91,7 +91,6 @@ class LoginActivity : AppCompatActivity() {
                 }
 
         }
-
     }
 
     // To cancel the error warning when user types into the fields

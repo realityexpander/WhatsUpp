@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">WhatsUpp</string>
+
+    <!--login activity    -->
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="button_login">Login</string>
     <string name="text_signup"><u>No Account? Go to sign up</u></string>
     <string name="text_content_description_whatsapp_logo">WhatsApp logo</string>
+
+    <!--menus-->
+    <string name="action_log_out">Log out</string>
 </resources>

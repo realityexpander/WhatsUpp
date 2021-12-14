@@ -85,7 +85,7 @@
                         android:layout_marginBottom="@dimen/grid_3x"
                         android:clickable="true"
                         android:onClick="onSignup"
-                        android:text="@string/text_signup" />
+                        android:text="@string/text_goto_signup" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/progressLayout"

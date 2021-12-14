@@ -38,14 +38,13 @@ class LoginActivity : AppCompatActivity() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(bind.root)
 
-        //setup text listeners
+        //setup text-etry reset error messages listeners
         setOnTextChangedListener(bind.emailET, bind.emailTIL)
         setOnTextChangedListener(bind.passwordET, bind.passwordTIL)
 
         // setup "progress indicator" event prevention
         bind.progressLayout.setOnTouchListener { v, evt -> true /* do nothing */  }
 
-        firebaseAuthListener
     }
 
     override fun onStart() {

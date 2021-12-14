@@ -5,9 +5,13 @@
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="button_login">Login</string>
-    <string name="text_signup"><u>No Account? Go to sign up</u></string>
+    <string name="text_goto_signup"><u>No Account? Go to Sign up</u></string>
     <string name="text_content_description_whatsapp_logo">WhatsApp logo</string>
 
     <!--menus-->
     <string name="action_log_out">Log out</string>
+
+    <!--sign up activity    -->
+    <string name="text_goto_login"><u><![CDATA[Have email & password? Go to Log-in]]></u></string>
+    <string name="button_signup">Sign Up</string>
 </resources>

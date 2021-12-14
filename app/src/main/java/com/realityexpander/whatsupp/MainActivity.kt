@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun onLogout() {
+    private fun onLogout() {
         firebaseAuth.signOut()
         startActivity(LoginActivity.newIntent(this))
         finish()

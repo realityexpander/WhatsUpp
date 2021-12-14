@@ -1,17 +1,17 @@
-package com.realityexpander.whatsupp
+package com.realityexpander.whatsupp.actvities
 
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
-import androidx.constraintlayout.widget.Placeholder
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.realityexpander.whatsupp.R
 import com.realityexpander.whatsupp.databinding.ActivityMainBinding
 import com.realityexpander.whatsupp.databinding.FragmentMainBinding
 

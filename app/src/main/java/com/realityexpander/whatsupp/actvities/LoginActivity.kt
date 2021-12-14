@@ -1,4 +1,4 @@
-package com.realityexpander.whatsupp
+package com.realityexpander.whatsupp.actvities
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,13 +10,10 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.Window
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.realityexpander.whatsupp.databinding.ActivityLoginBinding
-import com.realityexpander.whatsupp.databinding.ActivityMainBinding
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var bind: ActivityLoginBinding

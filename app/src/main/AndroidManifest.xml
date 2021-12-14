@@ -10,18 +10,18 @@
             android:name="androidx.multidex.MultiDexApplication"
             android:theme="@style/Theme.WhatsUpp">
         <activity
-                android:name=".MainActivity"
+                android:name=".actvities.MainActivity"
                 android:exported="false"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.WhatsUpp.NoActionBar"/>
         <activity
-                android:name=".SignupActivity"
+                android:name=".actvities.SignupActivity"
                 android:exported="false"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.WhatsUpp.NoActionBar"
                 android:windowSoftInputMode="adjustResize" />
         <activity
-                android:name=".LoginActivity"
+                android:name=".actvities.LoginActivity"
                 android:exported="true"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.WhatsUpp.NoActionBar"

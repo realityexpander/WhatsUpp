@@ -1,4 +1,4 @@
-package com.realityexpander.whatsupp
+package com.realityexpander.whatsupp.actvities
 
 import android.content.Context
 import android.content.Intent
@@ -11,13 +11,17 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.realityexpander.whatsupp.databinding.ActivitySignupBinding
+import com.realityexpander.whatsupp.util.DATA_USER_DATABASE
+import com.realityexpander.whatsupp.util.User
 
 class SignupActivity : AppCompatActivity() {
 
     private lateinit var bind: ActivitySignupBinding
 
     private val firebaseAuth = FirebaseAuth.getInstance()
+    private val firebaseDB = FirebaseFirestore.getInstance()
     private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
         val user = firebaseAuth.currentUser?.uid
         if(user != null) {
@@ -87,7 +91,16 @@ class SignupActivity : AppCompatActivity() {
                     bind.progressLayout.visibility = View.INVISIBLE
                     if(!task.isSuccessful) {
                         Toast.makeText(this@SignupActivity, "Signup unsuccessful ${task.exception?.localizedMessage}", Toast.LENGTH_SHORT).show()
+                    } else if (firebaseAuth.uid != null) {
+                        val email = bind.emailET.text.toString()
+                        val phone = bind.phoneET.text.toString()
+                        val name = bind.nameET.text.toString()
+                        val user = User(email, phone, name, "", "Hello, I'm new.", "", System.currentTimeMillis().toString())
+                        firebaseDB.collection(DATA_USER_DATABASE)
+                            .document(firebaseAuth.uid!!)
+                            .set(user)
                     }
+
                 }
                 .addOnFailureListener { e->
                     bind.progressLayout.visibility = View.INVISIBLE

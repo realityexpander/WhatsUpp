@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "102135446159",
+    "project_id": "whatsupp-zapr",
+    "storage_bucket": "whatsupp-zapr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102135446159:android:5515fc14458237aee5cefa",
+        "android_client_info": {
+          "package_name": "com.realityexpander.whatsupp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102135446159-0c90trq1nkurlio3m1p4obcg881q0han.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.realityexpander.whatsupp",
+            "certificate_hash": "e2606f4b5a1bfc415497552606e8f47a65c89e28"
+          }
+        },
+        {
+          "client_id": "102135446159-l9b9fbgek1fpph1uqu7o5ouosggdfi7f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB32UHziOUUgySbK3EvVVBGCZtqOzi0bdY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102135446159-l9b9fbgek1fpph1uqu7o5ouosggdfi7f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

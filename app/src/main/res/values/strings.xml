@@ -14,4 +14,6 @@
     <!--sign up activity    -->
     <string name="text_goto_login"><u><![CDATA[Have email & password? Go to Log-in]]></u></string>
     <string name="button_signup">Sign Up</string>
+    <string name="hint_phone_number">Phone number</string>
+    <string name="hint_user_name">User Name</string>
 </resources>

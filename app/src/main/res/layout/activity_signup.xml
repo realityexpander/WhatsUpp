@@ -28,10 +28,42 @@
                         android:src="@drawable/title" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/emailTIL"
+                        android:id="@+id/nameTIL"
                         android:layout_width="@dimen/standard_width"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/imageView"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="@dimen/grid_3x">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/nameET"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_user_name"
+                            android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/phoneTIL"
+                        android:layout_width="@dimen/standard_width"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/nameTIL"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="@dimen/grid_3x">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/phoneET"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_phone_number"
+                            android:inputType="phone" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/emailTIL"
+                        android:layout_width="@dimen/standard_width"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/phoneTIL"
                         android:layout_centerHorizontal="true"
                         android:layout_margin="@dimen/grid_3x">
 
@@ -74,7 +106,7 @@
                         android:text="@string/button_signup" />
 
                 <TextView
-                        android:id="@+id/signupTv"
+                        android:id="@+id/gotoLoginTv"
                         style="@style/Linktext"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

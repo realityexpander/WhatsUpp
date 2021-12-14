@@ -33,6 +33,8 @@ class SignupActivity : AppCompatActivity() {
         setContentView(bind.root)
 
         //setup text-etry reset error messages listeners
+        setOnTextChangedListener(bind.nameET, bind.nameTIL)
+        setOnTextChangedListener(bind.phoneET, bind.phoneTIL)
         setOnTextChangedListener(bind.emailET, bind.emailTIL)
         setOnTextChangedListener(bind.passwordET, bind.passwordTIL)
 
@@ -58,6 +60,16 @@ class SignupActivity : AppCompatActivity() {
     fun onSignup(v: View) {
         var proceed = true
 
+        if(bind.nameET.text.isNullOrEmpty()) {
+            bind.nameTIL.error = "Name is required"
+            bind.nameTIL.isErrorEnabled = true
+            proceed = false
+        }
+        if(bind.phoneET.text.isNullOrEmpty()) {
+            bind.phoneTIL.error = "Phone is required"
+            bind.phoneTIL.isErrorEnabled = true
+            proceed = false
+        }
         if(bind.emailET.text.isNullOrEmpty()) {
             bind.emailTIL.error = "Email is required"
             bind.emailTIL.isErrorEnabled = true
@@ -81,25 +93,19 @@ class SignupActivity : AppCompatActivity() {
                     bind.progressLayout.visibility = View.INVISIBLE
                     e.printStackTrace()
                 }
-
         }
     }
 
-    // To cancel the error warning when user types into the fields
+    // To remove the error warning when user types into the fields
     private fun setOnTextChangedListener(et: EditText, til: TextInputLayout) {
         et.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 til.isErrorEnabled = false
             }
         })
     }
-
 
     companion object {
         fun newIntent(context: Context) = Intent(context, SignupActivity::class.java)

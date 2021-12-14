@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth.removeAuthStateListener(firebaseAuthListener)
     }
 
-    fun onSignup(v: View) {
+    fun onGoToSignup(v: View) {
         startActivity(SignupActivity.newIntent(this))
         finish()
     }
@@ -92,7 +92,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // To cancel the error warning when user types into the fields
+    // To remove the error warning when user types into the fields
     private fun setOnTextChangedListener(et: EditText, til: TextInputLayout) {
         et.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

@@ -10,7 +10,7 @@ import com.realityexpander.whatsupp.databinding.DialogConfirmBinding
 fun AppCompatActivity.confirmDialog(
     context: Context,
     dialogMessage: String,
-    userId: String,
+    userId: String = "",
     positiveAction: (userId: String) -> Unit,
 ) {
 

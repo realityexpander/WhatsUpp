@@ -13,7 +13,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.realityexpander.whatsupp.databinding.ActivitySignupBinding
-import com.realityexpander.whatsupp.util.DATA_USER_DATABASE
+import com.realityexpander.whatsupp.util.DATA_USER_COLLECTION
 import com.realityexpander.whatsupp.util.User
 
 class SignupActivity : AppCompatActivity() {
@@ -110,7 +110,7 @@ class SignupActivity : AppCompatActivity() {
                             System.currentTimeMillis().toString())
 
                         // Save to database
-                        firebaseDB.collection(DATA_USER_DATABASE)
+                        firebaseDB.collection(DATA_USER_COLLECTION)
                             .document(firebaseAuth.uid!!)
                             .set(user)
                     }

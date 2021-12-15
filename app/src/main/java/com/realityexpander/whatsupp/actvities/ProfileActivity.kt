@@ -3,6 +3,7 @@ package com.realityexpander.whatsupp.actvities
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,25 +11,26 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.realityexpander.whatsupp.R
 import com.realityexpander.whatsupp.databinding.ActivityProfileBinding
-import com.realityexpander.whatsupp.util.DATA_USER_DATABASE
-import com.realityexpander.whatsupp.util.User
-import com.realityexpander.whatsupp.util.confirmDialog
-import com.realityexpander.whatsupp.util.loadUrl
+import com.realityexpander.whatsupp.util.*
+import java.lang.Exception
 
 
 class ProfileActivity : AppCompatActivity() {
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val firebaseDB = FirebaseFirestore.getInstance()
+    private val firebaseStorage = FirebaseStorage.getInstance().reference
     val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
     var currentUser: User? = null
-
     private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
         val user = firebaseAuth.currentUser?.uid
         if (user == null) {
@@ -39,6 +41,18 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private lateinit var bind: ActivityProfileBinding
+
+    // Setup photo picker (new way)
+    private val resultPhotoLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            if (uri != null) {
+                Glide.with(this)
+                    .load(uri)
+                    .into(bind.profileImageIv)
+
+                storeProfileImage(uri)
+            }
+        }
 
     companion object {
         fun newIntent(context: Context) = Intent(context, ProfileActivity::class.java)
@@ -63,13 +77,18 @@ class ProfileActivity : AppCompatActivity() {
         setOnTextChangedListener(bind.nameET, bind.nameTIL)
         setOnTextChangedListener(bind.phoneET, bind.phoneTIL)
 
+        // photo picker for profileImage
+        bind.profileImageIv.setOnClickListener {
+            resultPhotoLauncher.launch(arrayOf("image/*")) // OpenDocument
+        }
+
         populateInfo()
     }
 
     private fun populateInfo() {
         bind.progressLayout.visibility = View.VISIBLE
 
-        firebaseDB.collection(DATA_USER_DATABASE).document(currentUserId!!).get()
+        firebaseDB.collection(DATA_USER_COLLECTION).document(currentUserId!!).get()
             .addOnSuccessListener { documentSnapshot ->
                 currentUser = documentSnapshot.toObject(User::class.java)
 
@@ -77,7 +96,7 @@ class ProfileActivity : AppCompatActivity() {
                 bind.nameET.setText(currentUser?.username)
                 bind.phoneET.setText(currentUser?.phone)
                 currentUser?.profileImageUrl.let {
-                    bind.profileImageView.loadUrl(currentUser?.profileImageUrl,
+                    bind.profileImageIv.loadUrl(currentUser?.profileImageUrl,
                         R.drawable.default_user)
                 }
                 bind.progressLayout.visibility = View.GONE
@@ -135,7 +154,7 @@ class ProfileActivity : AppCompatActivity() {
             // Save to database
             bind.progressLayout.visibility = View.VISIBLE
             if (saveUser != null) {
-                firebaseDB.collection(DATA_USER_DATABASE)
+                firebaseDB.collection(DATA_USER_COLLECTION)
                     .document(firebaseAuth.uid!!)
                     .set(saveUser)
                     .addOnCompleteListener { task ->
@@ -182,7 +201,7 @@ class ProfileActivity : AppCompatActivity() {
 
         // Second delete the Firebase Database entry for this User
         fun deleteUserAccountData(userId: String) {
-            firebaseDB.collection(DATA_USER_DATABASE)
+            firebaseDB.collection(DATA_USER_COLLECTION)
                 .document(userId)
                 .delete()
                 .addOnCompleteListener(OnCompleteListener<Void?> { task ->
@@ -242,6 +261,71 @@ class ProfileActivity : AppCompatActivity() {
                 til.isErrorEnabled = false
             }
         })
+    }
+
+    fun onProfileImageAdd(view: View) {
+        resultPhotoLauncher.launch(arrayOf("image/*")) // OpenDocument
+    }
+
+    // Save the profile image to the firebase Storage
+    private fun storeProfileImage(profileImageUri: Uri?) {
+
+        // show failure message
+        fun onUploadFailure(e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this,
+                "Profile Image upload failed, please try again later. ${e.localizedMessage}",
+                Toast.LENGTH_LONG).show()
+            bind.progressLayout.visibility = View.GONE
+        }
+
+        profileImageUri?.let {
+            Toast.makeText(this, "Uploading...", Toast.LENGTH_LONG).show()
+            bind.progressLayout.visibility = View.VISIBLE
+
+            // Upload the new profile image to firebase Storage
+            val profileImageStorageRef =
+                firebaseStorage.child(DATA_USER_PROFILE_IMAGE_URL)
+                    .child(currentUserId!!)
+            profileImageStorageRef.putFile(profileImageUri)
+                .addOnSuccessListener {
+
+                    // Download the new profile image from firebase Storage
+                    profileImageStorageRef.downloadUrl
+                        .addOnSuccessListener { profileImageUri ->
+
+                            // Update the users' profile in the firebase user database with the new profileImageUrl
+                            val profileImageUrl = profileImageUri.toString()
+
+                            // create the hashmap for firebaseDB update object
+                            val map = HashMap<String, Any>()
+                            map[DATA_USER_PROFILE_IMAGE_URL] = profileImageUrl
+                            //map[DATA_USERS_UPDATED_TIMESTAMP] = System.currentTimeMillis()
+
+                            // Update the user account info with the new uploaded profile image
+                            firebaseDB.collection(DATA_USER_COLLECTION)
+                                .document(currentUserId)
+                                .update(map)
+                                .addOnSuccessListener { _ ->
+                                    // bind.profileImageIv.loadUrl(profileImageUrl, R.drawable.default_user) // we optimistically loaded the profile image after it was picked
+
+                                    Toast.makeText(this,
+                                        "Profile image update successful",
+                                        Toast.LENGTH_SHORT).show()
+                                    bind.progressLayout.visibility = View.GONE
+                                }
+                                .addOnFailureListener { e ->
+                                    onUploadFailure(e)
+                                }
+                        }
+                        .addOnFailureListener { e ->
+                            onUploadFailure(e)
+                        }
+                }
+                .addOnFailureListener { e ->
+                    onUploadFailure(e)
+                }
+        }
     }
 }
 

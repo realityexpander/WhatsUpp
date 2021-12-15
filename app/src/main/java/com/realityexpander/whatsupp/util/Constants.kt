@@ -1,6 +1,6 @@
 package com.realityexpander.whatsupp.util
 
-val DATA_USER_DATABASE = "users"
+val DATA_USER_COLLECTION = "users"
 val DATA_USER_EMAIL = "email"
 val DATA_USER_USERNAME = "username"
 val DATA_USER_PHONE = "phone"

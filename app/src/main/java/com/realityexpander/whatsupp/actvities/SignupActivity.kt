@@ -104,7 +104,7 @@ class SignupActivity : AppCompatActivity() {
                             email,
                             name,
                             phone,
-                            "",
+                            firebaseAuth.uid,
                             "",
                             "Hello, I'm new.",
                             System.currentTimeMillis().toString())

@@ -85,6 +85,15 @@ class ProfileActivity : AppCompatActivity() {
         populateInfo()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if(firebaseAuth.currentUser == null) {
+            startActivity(LoginActivity.newIntent(this))
+            finish()
+        }
+    }
+
     private fun populateInfo() {
         bind.progressLayout.visibility = View.VISIBLE
 

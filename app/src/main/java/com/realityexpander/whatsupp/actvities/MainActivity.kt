@@ -77,7 +77,6 @@ class MainActivity : AppCompatActivity() {
 
 
     class PlaceHolderFragment : Fragment() {
-
         private lateinit var dataBind: FragmentMainBinding
 
         override fun onCreateView(

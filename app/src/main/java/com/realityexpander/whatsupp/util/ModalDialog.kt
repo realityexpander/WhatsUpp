@@ -10,7 +10,8 @@ import com.realityexpander.whatsupp.databinding.DialogConfirmBinding
 fun AppCompatActivity.confirmDialog(
     context: Context,
     dialogMessage: String,
-    positiveAction: () -> Unit,
+    userId: String,
+    positiveAction: (userId: String) -> Unit,
 ) {
 
     val dialog = BottomSheetDialog(context)
@@ -31,7 +32,7 @@ fun AppCompatActivity.confirmDialog(
         dialog.dismiss()
         (bindDialog.root.parent as ViewGroup).removeView(bindDialog.root)
 
-        positiveAction()
+        positiveAction(userId)
     }
     bindDialog.negativeActionTv.setOnClickListener {
         dialog.dismiss()

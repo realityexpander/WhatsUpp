@@ -31,7 +31,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
         val user = firebaseAuth.currentUser?.uid
-        if(user == null) {
+        if (user == null) {
             // When logged out/deleted, go to the signup activity
             startActivity(SignupActivity.newIntent(this))
             finish()
@@ -77,7 +77,8 @@ class ProfileActivity : AppCompatActivity() {
                 bind.nameET.setText(currentUser?.username)
                 bind.phoneET.setText(currentUser?.phone)
                 currentUser?.profileImageUrl.let {
-                    bind.profileImageView.loadUrl(currentUser?.profileImageUrl, R.drawable.default_user)
+                    bind.profileImageView.loadUrl(currentUser?.profileImageUrl,
+                        R.drawable.default_user)
                 }
                 bind.progressLayout.visibility = View.GONE
             }
@@ -115,18 +116,18 @@ class ProfileActivity : AppCompatActivity() {
         var proceed = true
 
         // Check for form errors
-        if(bind.nameET.text.isNullOrEmpty()) {
+        if (bind.nameET.text.isNullOrEmpty()) {
             bind.nameTIL.error = "Name is required"
             bind.nameTIL.isErrorEnabled = true
             proceed = false
         }
-        if(bind.phoneET.text.isNullOrEmpty()) {
+        if (bind.phoneET.text.isNullOrEmpty()) {
             bind.phoneTIL.error = "Phone is required"
             bind.phoneTIL.isErrorEnabled = true
             proceed = false
         }
 
-        if(proceed) {
+        if (proceed) {
             val phone = bind.phoneET.text.toString()
             val name = bind.nameET.text.toString()
             val saveUser = currentUser?.copy(phone = phone, username = name)
@@ -140,7 +141,7 @@ class ProfileActivity : AppCompatActivity() {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Toast.makeText(this@ProfileActivity,
-                                "Update profile successful ${task.exception?.localizedMessage}",
+                                "Update profile successful!",
                                 Toast.LENGTH_SHORT).show()
 
                             currentUser = saveUser
@@ -165,23 +166,29 @@ class ProfileActivity : AppCompatActivity() {
 
     fun onDeleteAccount(view: View) {
         // confirm delete
-        val deleteAccountAction: () -> Unit = {
-            deleteCurrentUserAccount()
+        val deleteAccountAction: (userId: String) -> Unit = { userId ->
+            deleteUserAccount(userId)
         }
         confirmDialog(
             this@ProfileActivity,
             "Permanently Delete ${currentUser?.username}'s account?",
-            deleteAccountAction )
+            currentUserId!!,
+            deleteAccountAction
+        )
     }
 
-    private fun deleteCurrentUserAccount() {
+    private fun deleteUserAccount(userId: String) {
         bind.progressLayout.visibility = View.VISIBLE
-        if (currentUser != null) {
-            firebaseAuth.currentUser?.delete()
-                ?.addOnCompleteListener(OnCompleteListener<Void?> { task ->
+
+        // Second delete the Firebase Database entry for this User
+        fun deleteUserAccountData(userId: String) {
+            firebaseDB.collection(DATA_USER_DATABASE)
+                .document(userId)
+                .delete()
+                .addOnCompleteListener(OnCompleteListener<Void?> { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(this@ProfileActivity,
-                            "Your account & profile are deleted!!",
+                            "Your account & profile are deleted!",
                             Toast.LENGTH_SHORT).show()
 
                         currentUser = null
@@ -195,12 +202,40 @@ class ProfileActivity : AppCompatActivity() {
                         bind.progressLayout.visibility = View.INVISIBLE
                     }
                 })
+                .addOnFailureListener {
+                    Toast.makeText(this@ProfileActivity,
+                        "Failed to delete your account!",
+                        Toast.LENGTH_SHORT).show()
+                    bind.progressLayout.visibility = View.INVISIBLE
+                }
+        }
+
+        // first delete the Firebase Auth account
+        if (currentUser != null) {
+            firebaseAuth.currentUser!!
+                .delete()
+                .addOnCompleteListener(OnCompleteListener<Void?> { task ->
+                    if (task.isSuccessful) {
+                        deleteUserAccountData(currentUserId!!)
+                    } else {
+                        Toast.makeText(this@ProfileActivity,
+                            "Failed to delete your account!",
+                            Toast.LENGTH_SHORT).show()
+                        bind.progressLayout.visibility = View.INVISIBLE
+                    }
+                })
+                .addOnFailureListener {
+                    Toast.makeText(this@ProfileActivity,
+                        "Failed to delete your account!",
+                        Toast.LENGTH_LONG).show()
+                    bind.progressLayout.visibility = View.INVISIBLE
+                }
         }
     }
 
     // To remove the error warning when user types into the fields
     private fun setOnTextChangedListener(et: EditText, til: TextInputLayout) {
-        et.addTextChangedListener(object: TextWatcher {
+        et.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
@@ -209,3 +244,6 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 }
+
+
+

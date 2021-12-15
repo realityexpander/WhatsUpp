@@ -5,7 +5,7 @@ data class User (
     val username: String? = "",
     val phone: String? = "",
     val uid: String? = "",
-    val imageUrl: String? = "",
+    val profileImageUrl: String? = "",
     val statusUrl: String? = "",
     val statusTime: String = ""
 )

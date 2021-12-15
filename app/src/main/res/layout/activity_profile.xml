@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".actvities.ProfileActivity">
+
+        <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <ImageView
+                        android:id="@+id/profileImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/grid_2x"
+                        android:layout_marginTop="@dimen/grid_2x"
+                        android:layout_marginEnd="@dimen/grid_2x"
+                        android:layout_marginBottom="@dimen/grid_2x"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/text_content_description_whatsapp_logo"
+                        android:maxHeight="200dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/default_user" />
+
+                <TextView
+                        android:id="@+id/emailAddress"
+                        android:layout_width="@dimen/standard_width"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/profileImageView"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/grid_2x"
+                        android:layout_marginBottom="@dimen/grid_2x"
+                        android:text="email@provider.com" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/nameTIL"
+                        android:layout_width="@dimen/standard_width"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/emailAddress"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="@dimen/grid_3x">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/nameET"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_user_name"
+                            android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/phoneTIL"
+                        android:layout_width="@dimen/standard_width"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/nameTIL"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="@dimen/grid_3x">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/phoneET"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_phone_number"
+                            android:inputType="phone" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <Button
+                        android:id="@+id/updateProfileBtn"
+                        style="@style/StandardButton"
+                        android:layout_width="@dimen/standard_width"
+                        android:layout_height="@dimen/standard_height"
+                        android:layout_below="@id/phoneTIL"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/grid_3x"
+                        android:layout_marginTop="@dimen/grid_1x"
+                        android:layout_marginEnd="@dimen/grid_3x"
+                        android:layout_marginBottom="@dimen/grid_1x"
+                        android:onClick="onUpdateProfile"
+                        android:text="@string/button_update_profile" />
+
+                <Button
+                        android:id="@+id/changePassword"
+                        style="@style/StandardButton"
+                        android:layout_width="@dimen/standard_width"
+                        android:layout_height="@dimen/standard_height"
+                        android:layout_below="@id/updateProfileBtn"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/grid_3x"
+                        android:layout_marginTop="@dimen/grid_1x"
+                        android:layout_marginEnd="@dimen/grid_3x"
+                        android:layout_marginBottom="@dimen/grid_1x"
+                        android:onClick="onChangePassword"
+                        android:text="@string/button_change_password" />
+
+                <Button
+                        android:id="@+id/deleteAccountBtn"
+                        style="@style/DangerButton"
+                        android:layout_width="@dimen/standard_width"
+                        android:layout_height="@dimen/standard_height"
+                        android:layout_below="@id/changePassword"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/grid_3x"
+                        android:layout_marginTop="@dimen/grid_1x"
+                        android:layout_marginEnd="@dimen/grid_3x"
+                        android:layout_marginBottom="@dimen/grid_1x"
+                        android:onClick="onDeleteAccount"
+                        android:text="@string/button_delete_account" />
+
+            </RelativeLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/progressLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:background="@color/transparent_grey"
+                android:elevation="5dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="parent">
+
+            <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -25,10 +25,15 @@
     <style name="StandardButton">
         <item name="android:gravity">center_vertical</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:background">@drawable/standard_button_rounded</item>
         <item name="android:textColor">@color/design_default_color_on_primary</item>
         <item name="android:textSize">@dimen/standard_text_size</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:background">@drawable/standard_button_rounded</item>
+    </style>
+
+    <style name="DangerButton" parent="StandardButton">
+        <item name="android:background">@drawable/danger_button_rounded</item>
+        <item name="backgroundTint">@null</item>
     </style>
 
     <style name="Text">

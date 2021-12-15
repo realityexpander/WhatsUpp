@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         val id = item?.itemId
         when(item.itemId) {
             R.id.action_logout -> onLogout()
+            R.id.action_profile -> onGoToProfile()
         }
 
         return true
@@ -56,6 +57,10 @@ class MainActivity : AppCompatActivity() {
         firebaseAuth.signOut()
         startActivity(LoginActivity.newIntent(this))
         finish()
+    }
+
+    private fun onGoToProfile() {
+        startActivity(ProfileActivity.newIntent(this))
     }
 
 

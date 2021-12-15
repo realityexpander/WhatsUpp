@@ -24,7 +24,7 @@ class SignupActivity : AppCompatActivity() {
     private val firebaseDB = FirebaseFirestore.getInstance()
     private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
         val user = firebaseAuth.currentUser?.uid
-        if(user != null) {
+        if (user != null) {
             // When logged in, go to the main activity
             startActivity(MainActivity.newIntent(this))
             finish()
@@ -43,7 +43,7 @@ class SignupActivity : AppCompatActivity() {
         setOnTextChangedListener(bind.passwordET, bind.passwordTIL)
 
         // setup "progress indicator" event prevention
-        bind.progressLayout.setOnTouchListener { v, evt -> true /* do nothing */  }
+        bind.progressLayout.setOnTouchListener { v, evt -> true /* do nothing */ }
     }
 
     override fun onStart() {
@@ -64,45 +64,59 @@ class SignupActivity : AppCompatActivity() {
     fun onSignup(v: View) {
         var proceed = true
 
-        if(bind.nameET.text.isNullOrEmpty()) {
+        // Check for form errors
+        if (bind.nameET.text.isNullOrEmpty()) {
             bind.nameTIL.error = "Name is required"
             bind.nameTIL.isErrorEnabled = true
             proceed = false
         }
-        if(bind.phoneET.text.isNullOrEmpty()) {
+        if (bind.phoneET.text.isNullOrEmpty()) {
             bind.phoneTIL.error = "Phone is required"
             bind.phoneTIL.isErrorEnabled = true
             proceed = false
         }
-        if(bind.emailET.text.isNullOrEmpty()) {
+        if (bind.emailET.text.isNullOrEmpty()) {
             bind.emailTIL.error = "Email is required"
             bind.emailTIL.isErrorEnabled = true
             proceed = false
         }
-        if(bind.passwordET.text.isNullOrEmpty()) {
+        if (bind.passwordET.text.isNullOrEmpty()) {
             bind.passwordTIL.error = "Password is required"
-            bind.emailTIL.isErrorEnabled = true
+            bind.passwordTIL.isErrorEnabled = true
             proceed = false
         }
-        if(proceed) {
+
+        if (proceed) {
             bind.progressLayout.visibility = View.VISIBLE
-            firebaseAuth.createUserWithEmailAndPassword(bind.emailET.text.toString(), bind.passwordET.text.toString())
-                .addOnCompleteListener { task->
+            firebaseAuth.createUserWithEmailAndPassword(bind.emailET.text.toString(),
+                bind.passwordET.text.toString())
+                .addOnCompleteListener { task ->
                     bind.progressLayout.visibility = View.INVISIBLE
-                    if(!task.isSuccessful) {
-                        Toast.makeText(this@SignupActivity, "Signup unsuccessful ${task.exception?.localizedMessage}", Toast.LENGTH_SHORT).show()
+                    if (!task.isSuccessful) {
+                        Toast.makeText(this@SignupActivity,
+                            "Signup unsuccessful ${task.exception?.localizedMessage}",
+                            Toast.LENGTH_SHORT).show()
                     } else if (firebaseAuth.uid != null) {
                         val email = bind.emailET.text.toString()
                         val phone = bind.phoneET.text.toString()
                         val name = bind.nameET.text.toString()
-                        val user = User(email, phone, name, "", "Hello, I'm new.", "", System.currentTimeMillis().toString())
+                        val user = User(
+                            email,
+                            name,
+                            phone,
+                            "",
+                            "",
+                            "Hello, I'm new.",
+                            System.currentTimeMillis().toString())
+
+                        // Save to database
                         firebaseDB.collection(DATA_USER_DATABASE)
                             .document(firebaseAuth.uid!!)
                             .set(user)
                     }
 
                 }
-                .addOnFailureListener { e->
+                .addOnFailureListener { e ->
                     bind.progressLayout.visibility = View.INVISIBLE
                     e.printStackTrace()
                 }
@@ -111,7 +125,7 @@ class SignupActivity : AppCompatActivity() {
 
     // To remove the error warning when user types into the fields
     private fun setOnTextChangedListener(et: EditText, til: TextInputLayout) {
-        et.addTextChangedListener(object: TextWatcher {
+        et.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {

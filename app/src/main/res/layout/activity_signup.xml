@@ -4,7 +4,6 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".actvities.SignupActivity">
@@ -77,6 +76,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/passwordTIL"
+                        app:passwordToggleEnabled="true"
                         android:layout_width="@dimen/standard_width"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/emailTIL"

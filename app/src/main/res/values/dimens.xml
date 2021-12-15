@@ -8,7 +8,7 @@
     <dimen name="grid_5x">64dp</dimen>
 
 
-    <dimen name="fab_margin">@dimen/grid_2x</dimen>
+    <dimen name="fab_margin">@dimen/grid_3x</dimen>
     <dimen name="appbar_padding_top">@dimen/grid_1x</dimen>
     <dimen name="standard_width">300dp</dimen>
     <dimen name="standard_height">50dp</dimen>

@@ -47,9 +47,9 @@ class MainActivity : AppCompatActivity() {
         resizetabs()
         bind.tabs.getTabAt(1)?.select()
         bind.tabs.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
                 when(tab?.position) {
                     0 -> {bind.fab.hide()}
                     1 -> {bind.fab.show()}

@@ -120,32 +120,32 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    class PlaceHolderFragment : Fragment() {
-        private lateinit var dataBind: FragmentMainBinding
-
-        override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?,
-        ): View? {
-            dataBind = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
-            "Hello from section ${arguments?.getInt(ARG_SECTION_NUMBER)}".also { dataBind.sectionLabel.text = it }
-            return dataBind.root
-        }
-
-        companion object {
-            private val ARG_SECTION_NUMBER = "Section number"
-
-            fun newIntent(sectionNumber: Int): PlaceHolderFragment {
-                val fragment = PlaceHolderFragment()
-                val args = Bundle()
-                args.putInt(ARG_SECTION_NUMBER, sectionNumber)
-                fragment.arguments = args
-
-                return fragment
-            }
-        }
-    }
+//    class PlaceHolderFragment : Fragment() {
+//        private lateinit var dataBind: FragmentMainBinding
+//
+//        override fun onCreateView(
+//            inflater: LayoutInflater,
+//            container: ViewGroup?,
+//            savedInstanceState: Bundle?,
+//        ): View? {
+//            dataBind = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
+//            "Hello from section ${arguments?.getInt(ARG_SECTION_NUMBER)}".also { dataBind.sectionLabel.text = it }
+//            return dataBind.root
+//        }
+//
+//        companion object {
+//            private val ARG_SECTION_NUMBER = "Section number"
+//
+//            fun newIntent(sectionNumber: Int): PlaceHolderFragment {
+//                val fragment = PlaceHolderFragment()
+//                val args = Bundle()
+//                args.putInt(ARG_SECTION_NUMBER, sectionNumber)
+//                fragment.arguments = args
+//
+//                return fragment
+//            }
+//        }
+//    }
 
     private fun resizetabs() {
         val layout = (bind.tabs.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout

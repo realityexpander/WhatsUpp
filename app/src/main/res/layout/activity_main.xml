@@ -24,6 +24,31 @@
                     android:background="@color/colorPrimary"
                     app:layout_scrollFlags="scroll|enterAlways" />
 
+            <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <com.google.android.material.tabs.TabItem
+                        android:id="@+id/statusUpdateTI"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/camera" />
+
+                <com.google.android.material.tabs.TabItem
+                        android:id="@+id/chatsTI"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Chats" />
+
+                <com.google.android.material.tabs.TabItem
+                        android:id="@+id/statusUpdate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Status" />
+
+            </com.google.android.material.tabs.TabLayout>
+
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.viewpager.widget.ViewPager
@@ -42,10 +67,9 @@
                 android:layout_margin="@dimen/fab_margin"
                 android:alpha="1.0"
                 android:onClick="onNewChat"
-                android:src="@drawable/new_chat"
-                android:srcCompat="@drawable/new_chat"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/new_chat"
                 app:srcCompat="@drawable/new_chat"
                 app:tint="@null" />
 

@@ -23,6 +23,7 @@ class LoginActivity : AppCompatActivity() {
         val user = firebaseAuth.currentUser?.uid
         if(user != null) {
             // When logged in, go to the main activity
+            bind.progressLayout.visibility = View.VISIBLE
             startActivity(MainActivity.newIntent(this))
             finish()
         }
@@ -92,12 +93,8 @@ class LoginActivity : AppCompatActivity() {
     // To remove the error warning when user types into the fields
     private fun setOnTextChangedListener(et: EditText, til: TextInputLayout) {
         et.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 til.isErrorEnabled = false
             }

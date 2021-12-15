@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.realityexpander.whatsupp">
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
             android:name="androidx.multidex.MultiDexApplication"
             android:allowBackup="true"
@@ -10,21 +12,24 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.WhatsUpp">
         <activity
-                android:name=".actvities.ProfileActivity"
+                android:name=".activities.ContactsActivity"
                 android:exported="false" />
         <activity
-                android:name=".actvities.MainActivity"
+                android:name=".activities.ProfileActivity"
+                android:exported="false" />
+        <activity
+                android:name=".activities.MainActivity"
                 android:exported="false"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.WhatsUpp.NoActionBar" />
         <activity
-                android:name=".actvities.SignupActivity"
+                android:name=".activities.SignupActivity"
                 android:exported="false"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.WhatsUpp.NoActionBar"
                 android:windowSoftInputMode="adjustResize" />
         <activity
-                android:name=".actvities.LoginActivity"
+                android:name=".activities.LoginActivity"
                 android:exported="true"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.WhatsUpp.NoActionBar"

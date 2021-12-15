@@ -1,12 +1,16 @@
-package com.realityexpander.whatsupp.actvities
+package com.realityexpander.whatsupp.activities
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
-import androidx.databinding.DataBindingUtil
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -15,10 +19,10 @@ import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.realityexpander.whatsupp.R
 import com.realityexpander.whatsupp.databinding.ActivityMainBinding
-import com.realityexpander.whatsupp.databinding.FragmentMainBinding
 import com.realityexpander.whatsupp.fragments.ChatsFragment
 import com.realityexpander.whatsupp.fragments.StatusFragment
 import com.realityexpander.whatsupp.fragments.StatusUpdateFragment
+import com.realityexpander.whatsupp.util.REQUEST_PERMISSIONS_READ_CONTACTS
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bind: ActivityMainBinding
@@ -60,9 +64,10 @@ class MainActivity : AppCompatActivity() {
 
 
         bind.fab.setOnClickListener { view->
-            Snackbar.make(view, "Replace with action", Snackbar.LENGTH_SHORT)
-                .setAction("Action", null)
-                .show()
+            onNewChat(view)
+//            Snackbar.make(view, "Replace with action", Snackbar.LENGTH_SHORT)
+//                .setAction("Action", null)
+//                .show()
         }
     }
 
@@ -154,8 +159,41 @@ class MainActivity : AppCompatActivity() {
         layout.layoutParams = layoutParams
     }
 
-    fun onNewChat(view: View) {
-
+    private fun onNewChat(view: View) {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            // Permission not granted
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
+                AlertDialog.Builder(this)
+                    .setTitle("Contacts permission")
+                    .setMessage("This app requires access to your contacts to start a conversation.")
+                    .setPositiveButton("Ask me") { dialog, which ->
+                        requestContactsPermission()
+                    }
+                    .setNegativeButton("No") { _, _ -> }
+                    .show()
+            } else {
+                requestContactsPermission()
+            }
+        } else {
+            // Permission granted
+            startActivity(ContactsActivity.newIntent(this))
+        }
     }
-
+    private fun requestContactsPermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_CONTACTS), REQUEST_PERMISSIONS_READ_CONTACTS)
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            REQUEST_PERMISSIONS_READ_CONTACTS -> {
+                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(ContactsActivity.newIntent(this))
+                }
+            }
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.realityexpander.whatsupp.actvities
+package com.realityexpander.whatsupp.activities
 
 import android.content.Context
 import android.content.Intent

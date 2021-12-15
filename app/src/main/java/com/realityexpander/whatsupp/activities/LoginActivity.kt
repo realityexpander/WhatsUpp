@@ -1,4 +1,4 @@
-package com.realityexpander.whatsupp.actvities
+package com.realityexpander.whatsupp.activities
 
 import android.annotation.SuppressLint
 import android.content.Context

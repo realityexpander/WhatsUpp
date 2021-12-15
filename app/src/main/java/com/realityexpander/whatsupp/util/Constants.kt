@@ -1,5 +1,7 @@
 package com.realityexpander.whatsupp.util
 
+val REQUEST_PERMISSIONS_READ_CONTACTS = 10001
+
 val DATA_USER_COLLECTION = "users"
 val DATA_USER_EMAIL = "email"
 val DATA_USER_USERNAME = "username"

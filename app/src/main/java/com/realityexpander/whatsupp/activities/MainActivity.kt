@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         bind.container.adapter = sectionPagerAdapter
         bind.container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(bind.tabs))
         bind.tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(bind.container))
-        resizetabs()
+        resizeTabs()
         bind.tabs.getTabAt(1)?.select()
         bind.tabs.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
             override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity() {
 //        }
 //    }
 
-    private fun resizetabs() {
+    private fun resizeTabs() {
         val layout = (bind.tabs.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
         val layoutParams = layout.layoutParams as LinearLayout.LayoutParams
         layoutParams.weight = 0.4f
@@ -178,7 +178,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             // Permission granted
-            startContactPickerActivity2()
+            startContactPickerActivity()
         }
     }
     private fun requestContactsPermission() {
@@ -193,38 +193,22 @@ class MainActivity : AppCompatActivity() {
         when(requestCode) {
             REQUEST_PERMISSIONS_READ_CONTACTS -> {
                 if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startContactPickerActivity2()
+                    startContactPickerActivity()
                 }
             }
         }
     }
-//    fun startContactPickerActivity() {
-//        startActivityForResult(ContactsActivity.newIntent(this), REQUEST_NEW_CHAT)
-//    }
-//
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if(resultCode == Activity.RESULT_OK) {
-//            when(requestCode) {
-//                REQUEST_NEW_CHAT -> {
-//                    println("${data?.getStringExtra(PARAM_NAME)}, ${data?.getStringExtra(PARAM_PHONE)}")
-//
-//                }
-//            }
-//        }
-//    }
-
-
     private val launchContactsActivity = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
-            println("${data?.getStringExtra(CONTACTS_PARAM_NAME)}, ${data?.getStringExtra(CONTACTS_PARAM_PHONE)}")
+            println("${data?.getStringExtra(CONTACTS_PARAM_NAME)}, " +
+                    "${data?.getStringExtra(CONTACTS_PARAM_PHONE)}")
         }
     }
-    private fun startContactPickerActivity2() {
+    private fun startContactPickerActivity() {
         val intent = Intent(this, ContactsActivity::class.java)
         launchContactsActivity.launch(intent)
     }
-
 
 }
 

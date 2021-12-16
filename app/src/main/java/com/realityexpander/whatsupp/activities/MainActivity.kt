@@ -9,13 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.realityexpander.whatsupp.R
@@ -23,8 +23,8 @@ import com.realityexpander.whatsupp.databinding.ActivityMainBinding
 import com.realityexpander.whatsupp.fragments.ChatsFragment
 import com.realityexpander.whatsupp.fragments.StatusFragment
 import com.realityexpander.whatsupp.fragments.StatusUpdateFragment
-import com.realityexpander.whatsupp.util.REQUEST_NEW_CHAT
-import com.realityexpander.whatsupp.util.REQUEST_PERMISSIONS_READ_CONTACTS
+import com.realityexpander.whatsupp.util.*
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bind: ActivityMainBinding
@@ -36,9 +36,6 @@ class MainActivity : AppCompatActivity() {
     private val firebaseAuth = FirebaseAuth.getInstance()
 
     companion object {
-        val PARAM_NAME = "Contact Name"
-        val PARAM_PHONE = "Contact Phone"
-
         fun newIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 
@@ -181,7 +178,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             // Permission granted
-            startNewActivity()
+            startContactPickerActivity2()
         }
     }
     private fun requestContactsPermission() {
@@ -196,22 +193,39 @@ class MainActivity : AppCompatActivity() {
         when(requestCode) {
             REQUEST_PERMISSIONS_READ_CONTACTS -> {
                 if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startNewActivity()
+                    startContactPickerActivity2()
                 }
             }
         }
     }
-    fun startNewActivity() {
-        startActivityForResult(ContactsActivity.newIntent(this), REQUEST_NEW_CHAT)
-    }
+//    fun startContactPickerActivity() {
+//        startActivityForResult(ContactsActivity.newIntent(this), REQUEST_NEW_CHAT)
+//    }
+//
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if(resultCode == Activity.RESULT_OK) {
+//            when(requestCode) {
+//                REQUEST_NEW_CHAT -> {
+//                    println("${data?.getStringExtra(PARAM_NAME)}, ${data?.getStringExtra(PARAM_PHONE)}")
+//
+//                }
+//            }
+//        }
+//    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(resultCode == Activity.RESULT_OK) {
-            when(requestCode) {
-                REQUEST_NEW_CHAT -> {}
-            }
+
+    private val launchContactsActivity = registerForActivityResult(StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            println("${data?.getStringExtra(CONTACTS_PARAM_NAME)}, ${data?.getStringExtra(CONTACTS_PARAM_PHONE)}")
         }
     }
+    private fun startContactPickerActivity2() {
+        val intent = Intent(this, ContactsActivity::class.java)
+        launchContactsActivity.launch(intent)
+    }
+
+
 }
 
 

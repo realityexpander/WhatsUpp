@@ -1,13 +1,17 @@
 package com.realityexpander.whatsupp.util
 
 val REQUEST_PERMISSIONS_READ_CONTACTS = 10001
-val REQUEST_NEW_CHAT = 10002
 
-val DATA_USER_COLLECTION = "users"
-val DATA_USER_EMAIL = "email"
-val DATA_USER_USERNAME = "username"
-val DATA_USER_PHONE = "phone"
-val DATA_USER_UID = "uid"
-val DATA_USER_PROFILE_IMAGE_URL = "profileImageUrl"
-val DATA_USER_STATUS_URL = "statusUrl"
-val DATA_USER_STATUS_TIME = "statusTime"
+const val DATA_USER_COLLECTION = "users"
+const val DATA_USER_EMAIL = "email"
+const val DATA_USER_USERNAME = "username"
+const val DATA_USER_PHONE = "phone"
+const val DATA_USER_UID = "uid"
+const val DATA_USER_PROFILE_IMAGE_URL = "profileImageUrl"
+const val DATA_USER_STATUS_URL = "statusUrl"
+const val DATA_USER_STATUS_TIME = "statusTime"
+
+// Contacts List
+const val CONTACTS_PARAM_NAME = "Contact Name"
+const val CONTACTS_PARAM_PHONE = "Contact Phone"
+

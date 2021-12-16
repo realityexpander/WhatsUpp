@@ -1,6 +1,7 @@
 package com.realityexpander.whatsupp.activities
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -22,6 +23,7 @@ import com.realityexpander.whatsupp.databinding.ActivityMainBinding
 import com.realityexpander.whatsupp.fragments.ChatsFragment
 import com.realityexpander.whatsupp.fragments.StatusFragment
 import com.realityexpander.whatsupp.fragments.StatusUpdateFragment
+import com.realityexpander.whatsupp.util.REQUEST_NEW_CHAT
 import com.realityexpander.whatsupp.util.REQUEST_PERMISSIONS_READ_CONTACTS
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +36,9 @@ class MainActivity : AppCompatActivity() {
     private val firebaseAuth = FirebaseAuth.getInstance()
 
     companion object {
+        val PARAM_NAME = "Contact Name"
+        val PARAM_PHONE = "Contact Phone"
+
         fun newIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 
@@ -176,7 +181,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             // Permission granted
-            startActivity(ContactsActivity.newIntent(this))
+            startNewActivity()
         }
     }
     private fun requestContactsPermission() {
@@ -191,9 +196,48 @@ class MainActivity : AppCompatActivity() {
         when(requestCode) {
             REQUEST_PERMISSIONS_READ_CONTACTS -> {
                 if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startActivity(ContactsActivity.newIntent(this))
+                    startNewActivity()
                 }
             }
         }
     }
+    fun startNewActivity() {
+        startActivityForResult(ContactsActivity.newIntent(this), REQUEST_NEW_CHAT)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(resultCode == Activity.RESULT_OK) {
+            when(requestCode) {
+                REQUEST_NEW_CHAT -> {}
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

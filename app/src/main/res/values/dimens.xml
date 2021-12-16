@@ -14,4 +14,5 @@
     <dimen name="standard_height">50dp</dimen>
     <dimen name="standard_text_size">20sp</dimen>
     <dimen name="size_text_3x">16dp</dimen>
+    <dimen name="dimen_contact_text_size">20sp</dimen>
 </resources>

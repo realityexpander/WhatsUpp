@@ -240,26 +240,24 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         // first delete the Firebase Auth account
-        if (deleteUserId != null) {
-            firebaseAuth.currentUser!!
-                .delete()
-                .addOnCompleteListener(OnCompleteListener<Void?> { task ->
-                    if (task.isSuccessful) {
-                        deleteUserAccountData(deleteUserId)
-                    } else {
-                        Toast.makeText(this@ProfileActivity,
-                            "Failed to delete your account! Try again later.",
-                            Toast.LENGTH_SHORT).show()
-                        bind.progressLayout.visibility = View.INVISIBLE
-                    }
-                })
-                .addOnFailureListener {
+        firebaseAuth.currentUser!!
+            .delete()
+            .addOnCompleteListener(OnCompleteListener<Void?> { task ->
+                if (task.isSuccessful) {
+                    deleteUserAccountData(deleteUserId)
+                } else {
                     Toast.makeText(this@ProfileActivity,
                         "Failed to delete your account! Try again later.",
-                        Toast.LENGTH_LONG).show()
+                        Toast.LENGTH_SHORT).show()
                     bind.progressLayout.visibility = View.INVISIBLE
                 }
-        }
+            })
+            .addOnFailureListener {
+                Toast.makeText(this@ProfileActivity,
+                    "Failed to delete your account! Try again later.",
+                    Toast.LENGTH_LONG).show()
+                bind.progressLayout.visibility = View.INVISIBLE
+            }
     }
 
     // To remove the error warning when user types into the fields
@@ -273,6 +271,7 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onProfileImageAdd(view: View) {
         resultPhotoLauncher.launch(arrayOf("image/*")) // OpenDocument
     }

@@ -18,6 +18,21 @@ class ConversationAdapter(private var messages: ArrayList<Message>, val userId: 
         notifyDataSetChanged()
     }
 
+    fun modifyMessage(message: Message) {
+        messages = messages.filter {
+            it.timestamp != message.timestamp
+        } as ArrayList<Message>
+        messages.add(message)
+        notifyDataSetChanged()
+    }
+
+    fun removeMessage(message: Message) {
+        messages = messages.filter {
+            it.timestamp != message.timestamp
+        } as ArrayList<Message>
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, type: Int): MessagesViewHolder {
         if (type == MESSAGE_CURRENT_USER) {
             return MessagesViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_current_user_message, parent, false))
@@ -39,6 +54,8 @@ class ConversationAdapter(private var messages: ArrayList<Message>, val userId: 
             return MESSAGE_PARTNER_USER
         }
     }
+
+
 
     class MessagesViewHolder(val view: View): RecyclerView.ViewHolder(view) {
         fun bind(message: Message) {

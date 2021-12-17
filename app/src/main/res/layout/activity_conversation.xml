@@ -38,7 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                style="@style/Text"
+                style="@style/ChatTitle"
+                tools:text="Username Here"
                 android:paddingStart="@dimen/grid_1x"
                 android:paddingEnd="@dimen/grid_1x"/>
     </LinearLayout>

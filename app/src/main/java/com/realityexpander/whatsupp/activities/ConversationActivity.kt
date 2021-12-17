@@ -49,9 +49,10 @@ class ConversationActivity : AppCompatActivity() {
             adapter = conversationAdapter
         }
 
+        // Listen for database changes (ie: messages)
         firebaseDB.collection(DATA_CHATS_COLLECTION)
             .document(chatId!!)
-            .collection(DATA_CHAT_MESSAGES)
+            .collection(DATA_CHAT_MESSAGES_COLLECTION)
             .orderBy(DATA_CHAT_MESSAGE_TIMESTAMP)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 if (firebaseFirestoreException != null) {
@@ -71,8 +72,14 @@ class ConversationActivity : AppCompatActivity() {
                                         )
                                     }
                                 }
-                                DocumentChange.Type.MODIFIED -> {}
-                                DocumentChange.Type.REMOVED -> {}
+                                DocumentChange.Type.MODIFIED -> {
+                                    val message = change.document.toObject(Message::class.java)
+                                    conversationAdapter.modifyMessage(message)
+                                }
+                                DocumentChange.Type.REMOVED -> {
+                                    val message = change.document.toObject(Message::class.java)
+                                    conversationAdapter.removeMessage(message)
+                                }
                             }
                         }
                     }
@@ -91,7 +98,7 @@ class ConversationActivity : AppCompatActivity() {
 
             firebaseDB.collection(DATA_CHATS_COLLECTION)
                 .document(chatId!!)
-                .collection(DATA_CHAT_MESSAGES)
+                .collection(DATA_CHAT_MESSAGES_COLLECTION)
                 .document()
                 .set(message)
             bind.messageET.setText("", TextView.BufferType.EDITABLE)

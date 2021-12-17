@@ -76,7 +76,7 @@ class ChatsFragment : Fragment(), ChatsClickListener {
             }
     }
 
-    @Suppress("UNCHECKED_CAST") // for HashMap<String, String>
+
     private fun refreshChats() {
         firebaseDB.collection(DATA_USERS_COLLECTION)
             .document(userId!!)
@@ -87,6 +87,7 @@ class ChatsFragment : Fragment(), ChatsClickListener {
                     val chats = arrayListOf<String>()
 
                     // Collect the list of partners for this user
+                    @Suppress("UNCHECKED_CAST")
                     for (partner in (partners as HashMap<String, String>).keys) {
                         if (partners[partner] != null) {
                             chats.add(partners[partner]!!)
@@ -97,7 +98,6 @@ class ChatsFragment : Fragment(), ChatsClickListener {
             }
     }
 
-    @Suppress("UNCHECKED_CAST") // for HashMap<String, String>
     fun newChat(partnerId: String) {
         firebaseDB.collection(DATA_USERS_COLLECTION)
             .document(userId!!)
@@ -108,6 +108,7 @@ class ChatsFragment : Fragment(), ChatsClickListener {
                 // Create the chat for this user (if it doesn't already exist)
                 userDocument[DATA_USER_CHATS]?.let { userDocumentUserChats ->
                     if (userDocumentUserChats is HashMap<*, *>) {
+                        @Suppress("UNCHECKED_CAST")
                         val userChatsMap = userDocumentUserChats as HashMap<String, String>
 
                         if (userChatsMap.containsKey(partnerId)) {
@@ -128,6 +129,7 @@ class ChatsFragment : Fragment(), ChatsClickListener {
                         // Create the chat for the partner (if it doesn't already exist)
                         partnerDocument[DATA_USER_CHATS]?.let { partnerDocumentUserChats ->
                             if (partnerDocumentUserChats is HashMap<*, *>) {
+                                @Suppress("UNCHECKED_CAST")
                                 val partnerChatsMap = partnerDocumentUserChats as HashMap<String, String>
                                 partnerChatPartnersMap.putAll(partnerChatsMap)
                             }

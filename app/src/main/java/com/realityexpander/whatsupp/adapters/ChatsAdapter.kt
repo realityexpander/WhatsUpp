@@ -35,7 +35,7 @@ class ChatsAdapter(val chats: ArrayList<String>):
         @SuppressLint("ClickableViewAccessibility") // for progressLayout event trapper
         fun bind(chatId: String, listener: ChatsClickListener?) {
             progressLayout.visibility = View.VISIBLE
-            progressLayout.setOnTouchListener {v, event -> true }
+            progressLayout.setOnTouchListener {_, _ -> true }
 
             // Fill in partnerId data for this chatId
             firebaseDB.collection(DATA_CHATS_COLLECTION)
@@ -46,6 +46,7 @@ class ChatsAdapter(val chats: ArrayList<String>):
 
                     // In the chat participants list, find the partnerId
                     chatParticipants?.let {
+                        @Suppress("UNCHECKED_CAST")
                         for(participant in chatParticipants as ArrayList<String>) {
                             if(participant != userId) {
                                 partnerId = participant
@@ -80,7 +81,7 @@ class ChatsAdapter(val chats: ArrayList<String>):
                 listener?.onChatClicked(chatId, partnerId, chatImageUrl, chatName)
             }
 
-            progressLayout.setOnTouchListener { v, evt -> true /* do nothing */  }
+            progressLayout.setOnTouchListener { _, _ -> true /* do nothing */  }
         }
     }
 

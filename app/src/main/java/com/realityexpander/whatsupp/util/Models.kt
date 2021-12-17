@@ -21,10 +21,10 @@ data class Chat(
 
 data class Message(
     val timestamp: Long? = 0L,
-    val fromId: String? = "",
-    val fromName: String? = "",
-    val toId: String? = "",
-    val toName: String? = "",
+    val fromUserId: String? = "",
+    val fromUserName: String? = "",
+    val toUserId: String? = "",
+    val toUserName: String? = "",
     val message: String? = "",
     val imageUrl: String? = ""
 )

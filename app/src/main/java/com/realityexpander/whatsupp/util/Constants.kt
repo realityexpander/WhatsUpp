@@ -3,11 +3,26 @@ package com.realityexpander.whatsupp.util
 // Permissions
 val REQUEST_PERMISSIONS_READ_CONTACTS = 10001
 
-// Contacts List
+// Contacts Activity
 const val CONTACTS_PARAM_NAME = "Contact Name"
 const val CONTACTS_PARAM_PHONE = "Contact Phone"
 
-// Users
+// Conversations Activity
+const val CONVERSATIONS_PARAM_CHAT_ID = "Chat id"
+const val CONVERSATIONS_PARAM_IMAGE_URL = "Image url"
+const val CONVERSATIONS_PARAM_PARTNER_USER_ID = "Other user id"
+const val CONVERSATIONS_PARAM_CHAT_NAME = "Chat name"
+
+
+///////// FIREBASE STORAGE /////////
+
+// Images Data Store
+val DATA_IMAGES = "Images"
+
+
+///////// FIREBASE CLOUD FIRESTORE ///////
+
+// Users collection
 const val DATA_USERS_COLLECTION = "users"
 const val DATA_USER_EMAIL = "email"
 const val DATA_USER_USERNAME = "username"
@@ -19,10 +34,7 @@ const val DATA_USER_STATUS_TIMESTAMP = "statusTimestamp"
   // subdocument: /chats
 const val DATA_USER_CHATS = "userChats"
 
-// Images
-val DATA_IMAGES = "Images"
-
-// Chats
+// Chats collection
 const val DATA_CHATS_COLLECTION = "chats"
   // subdocument: /chatParticipants
 const val DATA_CHAT_PARTICIPANTS = "chatParticipants"

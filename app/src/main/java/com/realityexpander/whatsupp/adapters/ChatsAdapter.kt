@@ -79,6 +79,8 @@ class ChatsAdapter(val chats: ArrayList<String>):
             layout.setOnClickListener {
                 listener?.onChatClicked(chatId, partnerId, chatImageUrl, chatName)
             }
+
+            progressLayout.setOnTouchListener { v, evt -> true /* do nothing */  }
         }
     }
 

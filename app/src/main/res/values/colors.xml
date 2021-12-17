@@ -20,4 +20,6 @@
 
     <color name="textPrimary">#000000</color>
     <color name="textSecondary">#FFFFFF</color>
+
+    <color name="shadow_color">#cadddddd</color>
 </resources>

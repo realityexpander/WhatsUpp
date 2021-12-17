@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.realityexpander.whatsupp.activities.ConversationActivity
 import com.realityexpander.whatsupp.adapters.ChatsAdapter
 import com.realityexpander.whatsupp.databinding.FragmentChatsBinding
 import com.realityexpander.whatsupp.listener.ChatsClickListener
@@ -68,13 +69,14 @@ class ChatsFragment : Fragment(), ChatsClickListener {
         // Listen for any changes in the Database (like new messages)
         firebaseDB.collection(DATA_USERS_COLLECTION)
             .document(userId!!)
-            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+            .addSnapshotListener { _, firebaseFirestoreException ->
                 if (firebaseFirestoreException == null) {
                     refreshChats()
                 }
             }
     }
 
+    @Suppress("UNCHECKED_CAST") // for HashMap<String, String>
     private fun refreshChats() {
         firebaseDB.collection(DATA_USERS_COLLECTION)
             .document(userId!!)
@@ -95,6 +97,7 @@ class ChatsFragment : Fragment(), ChatsClickListener {
             }
     }
 
+    @Suppress("UNCHECKED_CAST") // for HashMap<String, String>
     fun newChat(partnerId: String) {
         firebaseDB.collection(DATA_USERS_COLLECTION)
             .document(userId!!)
@@ -130,6 +133,7 @@ class ChatsFragment : Fragment(), ChatsClickListener {
                             }
                         }
 
+                        // Prepare to save the new chat and update the user and partner
                         val chatParticipants = arrayListOf(userId, partnerId)
                         val chat = Chat(chatParticipants)
                         val chatDocRef = firebaseDB.collection(DATA_CHATS_COLLECTION).document()
@@ -159,15 +163,16 @@ class ChatsFragment : Fragment(), ChatsClickListener {
 
     override fun onChatClicked(
         chatId: String?,
-        otherUserId: String?,
+        partnerUserId: String?,
         chatImageUrl: String?,
         chatName: String?,
     ) {
-//        startActivity(ConversationActivity.newIntent(context,
-//            chatId,
-//            chatImageUrl,
-//            otherUserId,
-//            chatName)
-//        )
+        startActivity(
+            ConversationActivity.newIntent(context,
+            chatId,
+            chatImageUrl,
+            partnerUserId,
+            chatName)
+        )
     }
 }

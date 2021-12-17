@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.google.android.material.R.style.Base_Theme_MaterialComponents_Dialog
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -96,7 +97,6 @@ class MainActivity : AppCompatActivity(), FailureCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item?.itemId
         when(item.itemId) {
             R.id.action_logout -> onLogout()
             R.id.action_profile -> onGoToProfile()
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), FailureCallback {
     }
 
 
-    inner class SectionPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    inner class SectionPagerAdapter(fm: FragmentManager): FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         override fun getItem(position: Int): Fragment {
             //  return PlaceHolderFragment.newIntent(position + 1)
@@ -168,6 +168,7 @@ class MainActivity : AppCompatActivity(), FailureCallback {
         layout.layoutParams = layoutParams
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onNewChat(view: View) {
         if(ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -176,7 +177,7 @@ class MainActivity : AppCompatActivity(), FailureCallback {
                 AlertDialog.Builder(this)
                     .setTitle("Contacts permission")
                     .setMessage("This app requires access to your contacts to start a conversation.")
-                    .setPositiveButton("Ask me") { dialog, which ->
+                    .setPositiveButton("Ask me") { _, _ ->
                         requestContactsPermission()
                     }
                     .setNegativeButton("No") { _, _ -> }
@@ -234,20 +235,18 @@ class MainActivity : AppCompatActivity(), FailureCallback {
                             // Found valid partner with phone number, so start a new chat
                             chatsFragment.newChat(partnerId)
                         } else {
-                            AlertDialog.Builder(this,
-                                com.google.android.material.R.style.Base_Theme_MaterialComponents_Dialog)
+                            AlertDialog.Builder(this, Base_Theme_MaterialComponents_Dialog)
                                 .setTitle("Can't send messages to self.")
-                                .setPositiveButton("OK") {dialog, which -> }
+                                .setPositiveButton("OK") { _, _ -> }
                                 .show()
                         }
                     } else {
                         // Invite the new user via SMS
-                        AlertDialog.Builder(this,
-                            com.google.android.material.R.style.Base_Theme_MaterialComponents_Dialog)
+                        AlertDialog.Builder(this, Base_Theme_MaterialComponents_Dialog)
                             .setTitle("User not found")
                             .setMessage("$name does not have an account. " +
                                     "Send them an SMS to ask them to install this app.")
-                            .setPositiveButton("OK") { dialog, which ->
+                            .setPositiveButton("OK") { _, _ ->
                                 val intent = Intent(Intent.ACTION_SENDTO)
                                 intent.data = Uri.parse("sms:$phone")
                                 intent.putExtra("sms_body", "Hi. I'm using this new cool " +
@@ -259,7 +258,7 @@ class MainActivity : AppCompatActivity(), FailureCallback {
                     }
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(this, "An error occured. Please try again later", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "An error occurred. Please try again later", Toast.LENGTH_SHORT).show()
                     e.printStackTrace()
                 }
         }

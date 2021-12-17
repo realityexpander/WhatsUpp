@@ -15,4 +15,17 @@
     <dimen name="standard_text_size">20sp</dimen>
     <dimen name="size_text_3x">16dp</dimen>
     <dimen name="dimen_contact_text_size">20sp</dimen>
+
+    <dimen name="chat_text_size">18dp</dimen>
+    <dimen name="chat_standard_size">50dp</dimen>
+    <dimen name="chat_max_size">300dp</dimen>
+
+    <dimen name="text_size">20sp</dimen>
+    <dimen name="chat_image_size">100dp</dimen>
+    <dimen name="chat_image_radius">50dp</dimen>
+    <dimen name="card_corner_radius">25dp</dimen>
+    <dimen name="send_width">100dp</dimen>
+    <dimen name="send_height">75dp</dimen>
+    <dimen name="send_min_height">75dp</dimen>
+    <dimen name="send_max_height">150dp</dimen>
 </resources>

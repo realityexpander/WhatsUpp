@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/chatLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:padding="@dimen/grid_2x"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+            android:id="@+id/chatCv"
+            android:layout_width="@dimen/chat_image_size"
+            android:layout_height="@dimen/chat_image_size"
+            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"
+            app:cardCornerRadius="@dimen/chat_image_radius">
+
+        <ImageView
+                android:id="@+id/chatIv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/content_description_profile_image"
+                android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+            android:id="@+id/chatTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/chatCv"
+            android:paddingStart="@dimen/grid_2x"
+            android:paddingEnd="@dimen/grid_2x"
+            android:layout_centerVertical="true"
+            style="@style/Title"/>
+
+    <LinearLayout
+            android:id="@+id/progressLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:elevation="10dp"
+            android:visibility="gone"
+            android:background="@color/transparent_grey">
+
+        <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</RelativeLayout>

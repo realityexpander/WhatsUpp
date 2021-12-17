@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.realityexpander.whatsupp.adapters.ContactsAdapter
 import com.realityexpander.whatsupp.databinding.ActivityContactsBinding
 import com.realityexpander.whatsupp.listener.ContactsClickListener
+import com.realityexpander.whatsupp.util.CONTACTS_PARAM_NAME
+import com.realityexpander.whatsupp.util.CONTACTS_PARAM_PHONE
 import com.realityexpander.whatsupp.util.Contact
 
 class ContactsActivity : AppCompatActivity(), ContactsClickListener {
@@ -90,8 +92,8 @@ class ContactsActivity : AppCompatActivity(), ContactsClickListener {
 
     override fun onContactClicked(name: String?, phone: String?) {
         val intent = Intent()
-        intent.putExtra(MainActivity.PARAM_NAME, name)
-        intent.putExtra(MainActivity.PARAM_PHONE, phone)
+        intent.putExtra(CONTACTS_PARAM_NAME, name)
+        intent.putExtra(CONTACTS_PARAM_PHONE, phone)
         setResult(Activity.RESULT_OK, intent)
         finish()
     }

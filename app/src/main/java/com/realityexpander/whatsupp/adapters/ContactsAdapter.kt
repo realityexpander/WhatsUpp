@@ -27,7 +27,7 @@ class ContactsAdapter(val contacts: ArrayList<Contact>):
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactsViewHolder = ContactsViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ContactsViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_contact, parent, false)
     )
 
@@ -41,6 +41,4 @@ class ContactsAdapter(val contacts: ArrayList<Contact>):
     }
 
     override fun getItemCount(): Int = contacts.size
-
-
 }

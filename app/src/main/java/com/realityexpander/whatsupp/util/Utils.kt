@@ -12,6 +12,7 @@ import com.realityexpander.whatsupp.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -61,4 +62,9 @@ fun Long?.getDateString(): String {
     val resultDate = Date(dateLong!!)
 
     return sdf.format(resultDate).lowercase(Locale.US)
+}
+
+fun getTime(): String {
+    val df = DateFormat.getDateInstance()
+    return df.format(Date())
 }

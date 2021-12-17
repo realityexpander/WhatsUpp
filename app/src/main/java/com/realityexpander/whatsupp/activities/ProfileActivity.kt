@@ -97,7 +97,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun populateInfo() {
         bind.progressLayout.visibility = View.VISIBLE
 
-        firebaseDB.collection(DATA_USER_COLLECTION).document(currentUserId!!).get()
+        firebaseDB.collection(DATA_USERS_COLLECTION).document(currentUserId!!).get()
             .addOnSuccessListener { documentSnapshot ->
                 currentUser = documentSnapshot.toObject(User::class.java)
 
@@ -163,7 +163,7 @@ class ProfileActivity : AppCompatActivity() {
             // Save to database
             bind.progressLayout.visibility = View.VISIBLE
             if (saveUser != null) {
-                firebaseDB.collection(DATA_USER_COLLECTION)
+                firebaseDB.collection(DATA_USERS_COLLECTION)
                     .document(firebaseAuth.uid!!)
                     .set(saveUser)
                     .addOnCompleteListener { task ->
@@ -210,7 +210,7 @@ class ProfileActivity : AppCompatActivity() {
 
         // Second delete the Firebase Database entry for this User
         fun deleteUserAccountData(userId: String) {
-            firebaseDB.collection(DATA_USER_COLLECTION)
+            firebaseDB.collection(DATA_USERS_COLLECTION)
                 .document(userId)
                 .delete()
                 .addOnCompleteListener(OnCompleteListener<Void?> { task ->
@@ -312,7 +312,7 @@ class ProfileActivity : AppCompatActivity() {
                             //map[DATA_USERS_UPDATED_TIMESTAMP] = System.currentTimeMillis()
 
                             // Update the user account info with the new uploaded profile image
-                            firebaseDB.collection(DATA_USER_COLLECTION)
+                            firebaseDB.collection(DATA_USERS_COLLECTION)
                                 .document(currentUserId)
                                 .update(map)
                                 .addOnSuccessListener { _ ->

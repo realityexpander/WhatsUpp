@@ -75,6 +75,7 @@ class LoginActivity : AppCompatActivity() {
         }
         if(proceed) {
             bind.progressLayout.visibility = View.VISIBLE
+
             firebaseAuth.signInWithEmailAndPassword(bind.emailET.text.toString(), bind.passwordET.text.toString())
                 .addOnCompleteListener { task->
                     bind.progressLayout.visibility = View.INVISIBLE

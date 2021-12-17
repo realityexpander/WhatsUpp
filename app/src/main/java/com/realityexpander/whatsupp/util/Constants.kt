@@ -9,7 +9,7 @@ const val CONTACTS_PARAM_PHONE = "Contact Phone"
 
 // Conversations Activity
 const val CONVERSATIONS_PARAM_CHAT_ID = "Chat id"
-const val CONVERSATIONS_PARAM_IMAGE_URL = "Image url"
+const val CONVERSATIONS_PARAM_PARTNER_PROFILE_IMAGE_URL = "Image url"
 const val CONVERSATIONS_PARAM_PARTNER_USER_ID = "Other user id"
 const val CONVERSATIONS_PARAM_CHAT_NAME = "Chat name"
 

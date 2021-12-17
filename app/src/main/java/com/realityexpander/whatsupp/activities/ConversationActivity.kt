@@ -32,11 +32,11 @@ class ConversationActivity : AppCompatActivity() {
         setContentView(bind.root)
 
         chatId = intent.extras?.getString(CONVERSATIONS_PARAM_CHAT_ID)
-        imageUrl = intent.extras?.getString(CONVERSATIONS_PARAM_IMAGE_URL)
+        imageUrl = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_PROFILE_IMAGE_URL)
         chatName = intent.extras?.getString(CONVERSATIONS_PARAM_CHAT_NAME)
         otherUserId = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_USER_ID)
         if (chatId.isNullOrEmpty() || userId.isNullOrEmpty()) {
-            Toast.makeText(this, "Chat room error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Chat room error, chatId or userId is bad.", Toast.LENGTH_SHORT).show()
             finish()
         }
 
@@ -61,10 +61,10 @@ class ConversationActivity : AppCompatActivity() {
                 } else {
                     querySnapshot?.let {
                         for (change in querySnapshot.documentChanges) {
+                            val message = change.document.toObject(Message::class.java)
+
                             when (change.type) {
                                 DocumentChange.Type.ADDED -> {
-                                    val message = change.document.toObject(Message::class.java)
-
                                     conversationAdapter.addMessage(message)
                                     bind.messagesRV.post {
                                         bind.messagesRV.smoothScrollToPosition(
@@ -73,11 +73,9 @@ class ConversationActivity : AppCompatActivity() {
                                     }
                                 }
                                 DocumentChange.Type.MODIFIED -> {
-                                    val message = change.document.toObject(Message::class.java)
                                     conversationAdapter.modifyMessage(message)
                                 }
                                 DocumentChange.Type.REMOVED -> {
-                                    val message = change.document.toObject(Message::class.java)
                                     conversationAdapter.removeMessage(message)
                                 }
                             }
@@ -99,13 +97,16 @@ class ConversationActivity : AppCompatActivity() {
             firebaseDB.collection(DATA_CHATS_COLLECTION)
                 .document(chatId!!)
                 .collection(DATA_CHAT_MESSAGES_COLLECTION)
-                .document()
+                .document() // new document
                 .set(message)
+
+            // reset the send message EditText entry
             bind.messageET.setText("", TextView.BufferType.EDITABLE)
         }
     }
 
     companion object {
+        // To navigate to this Conversation activity
         fun newIntent(
             context: Context?,
             chatId: String?,
@@ -115,7 +116,7 @@ class ConversationActivity : AppCompatActivity() {
         ): Intent {
             val intent = Intent(context, ConversationActivity::class.java)
             intent.putExtra(CONVERSATIONS_PARAM_CHAT_ID, chatId)
-            intent.putExtra(CONVERSATIONS_PARAM_IMAGE_URL, imageUrl)
+            intent.putExtra(CONVERSATIONS_PARAM_PARTNER_PROFILE_IMAGE_URL, imageUrl)
             intent.putExtra(CONVERSATIONS_PARAM_PARTNER_USER_ID, otherUserId)
             intent.putExtra(CONVERSATIONS_PARAM_CHAT_NAME, chatName)
             return intent

@@ -121,6 +121,7 @@ class ProfileActivity : AppCompatActivity() {
         return true
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onChangePassword(view: View) {
         bind.progressLayout.visibility = View.VISIBLE
 
@@ -140,6 +141,7 @@ class ProfileActivity : AppCompatActivity() {
             })
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onUpdateProfile(view: View) {
         var proceed = true
 
@@ -192,69 +194,68 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onDeleteAccount(view: View) {
-        // confirm delete
-        val deleteAccountAction: (userId: String) -> Unit = { userId ->
-            deleteUserAccount(userId)
-        }
         confirmDialog(
             this@ProfileActivity,
             "Permanently Delete ${currentUser?.username}'s account?",
-            currentUserId!!,
-            deleteAccountAction
-        )
+            currentUserId!!
+        ) { deleteUserId ->
+            deleteUserAccount(deleteUserId)
+        }
     }
 
-    private fun deleteUserAccount(userId: String) {
+    private fun deleteUserAccount(deleteUserId: String) {
         bind.progressLayout.visibility = View.VISIBLE
 
         // Second delete the Firebase Database entry for this User
-        fun deleteUserAccountData(userId: String) {
+        fun deleteUserAccountData(deleteUserId: String) {
             firebaseDB.collection(DATA_USERS_COLLECTION)
-                .document(userId)
+                .document(deleteUserId)
                 .delete()
                 .addOnCompleteListener(OnCompleteListener<Void?> { task ->
                     if (task.isSuccessful) {
+                        bind.progressLayout.visibility = View.INVISIBLE
+
                         Toast.makeText(this@ProfileActivity,
                             "Your account & profile are deleted!",
                             Toast.LENGTH_SHORT).show()
 
                         currentUser = null
-                        bind.progressLayout.visibility = View.INVISIBLE
                         startActivity(Intent(this@ProfileActivity, SignupActivity::class.java))
                         finish()
                     } else {
+                        bind.progressLayout.visibility = View.INVISIBLE
                         Toast.makeText(this@ProfileActivity,
                             "Failed to delete your account!",
                             Toast.LENGTH_SHORT).show()
-                        bind.progressLayout.visibility = View.INVISIBLE
                     }
                 })
                 .addOnFailureListener {
+                    bind.progressLayout.visibility = View.INVISIBLE
                     Toast.makeText(this@ProfileActivity,
                         "Failed to delete your account!",
                         Toast.LENGTH_SHORT).show()
-                    bind.progressLayout.visibility = View.INVISIBLE
                 }
         }
 
         // first delete the Firebase Auth account
-        if (currentUser != null) {
+        if (deleteUserId != null) {
             firebaseAuth.currentUser!!
                 .delete()
                 .addOnCompleteListener(OnCompleteListener<Void?> { task ->
                     if (task.isSuccessful) {
-                        deleteUserAccountData(currentUserId!!)
+                        deleteUserAccountData(deleteUserId)
                     } else {
                         Toast.makeText(this@ProfileActivity,
-                            "Failed to delete your account!",
+                            "Failed to delete your account! Try again later.",
                             Toast.LENGTH_SHORT).show()
                         bind.progressLayout.visibility = View.INVISIBLE
                     }
                 })
                 .addOnFailureListener {
                     Toast.makeText(this@ProfileActivity,
-                        "Failed to delete your account!",
+                        "Failed to delete your account! Try again later.",
                         Toast.LENGTH_LONG).show()
                     bind.progressLayout.visibility = View.INVISIBLE
                 }

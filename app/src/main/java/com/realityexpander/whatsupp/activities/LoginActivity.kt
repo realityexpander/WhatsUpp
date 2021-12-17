@@ -41,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
         setOnTextChangedListener(bind.passwordET, bind.passwordTIL)
 
         // setup "progress indicator" event prevention
-        bind.progressLayout.setOnTouchListener { v, evt -> true /* do nothing */  }
+        bind.progressLayout.setOnTouchListener { _, _ -> true /* do nothing */  }
 
     }
 
@@ -55,11 +55,13 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth.removeAuthStateListener(firebaseAuthListener)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onGoToSignup(v: View) {
         startActivity(SignupActivity.newIntent(this))
         finish()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onLogin(v: View) {
         var proceed = true
 

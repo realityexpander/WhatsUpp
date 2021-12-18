@@ -4,7 +4,7 @@
         xmlns:tool="http://schemas.android.com/tools"
         android:id="@+id/itemLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/chat_image_size"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/grid_2x"
         android:gravity="center_vertical">
 
@@ -12,23 +12,28 @@
             android:id="@+id/itemCv"
             android:layout_width="@dimen/chat_image_size"
             android:layout_height="@dimen/chat_image_size"
-            android:padding="@dimen/grid_2x"
             android:layout_alignParentStart="true"
-            app:cardCornerRadius="@dimen/chat_image_radius"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/grid_1x"
+            android:padding="@dimen/grid_2x"
+            app:cardCornerRadius="@dimen/chat_image_radius">
 
         <ImageView
                 android:id="@+id/profileImageIv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:contentDescription="@string/content_description_profile_image" />
+                android:contentDescription="@string/content_description_profile_image"
+                android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/itemCv"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
             android:layout_toEndOf="@id/itemCv"
             android:gravity="center_vertical"
             android:orientation="vertical"
@@ -49,8 +54,8 @@
                 style="@style/Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
                 android:ellipsize="end"
+                android:maxLines="2"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/usernameTv"
                 tool:text="This is my status message, it goes on and on and on and on and on and on and on." />

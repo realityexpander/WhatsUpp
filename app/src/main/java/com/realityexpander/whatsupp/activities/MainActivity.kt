@@ -127,18 +127,10 @@ class MainActivity : AppCompatActivity(), UserNotLoggedInError {
         override fun getItem(position: Int): Fragment {
             //  return PlaceHolderFragment.newIntent(position + 1)
             return when (position) {
-                0 -> {
-                    statusUpdateFragment
-                }
-                1 -> {
-                    chatsFragment
-                }
-                2 -> {
-                    statusListFragment
-                }
-                else -> {
-                    statusListFragment
-                }
+                0 -> statusUpdateFragment
+                1 -> chatsFragment
+                2 -> statusListFragment
+                else -> statusListFragment
             }
         }
 

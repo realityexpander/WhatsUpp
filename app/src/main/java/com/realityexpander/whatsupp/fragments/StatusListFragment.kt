@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.realityexpander.whatsupp.activities.MainActivity
 import com.realityexpander.whatsupp.activities.StatusActivity
 import com.realityexpander.whatsupp.adapters.StatusListAdapter
@@ -34,6 +35,7 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
     private val firebaseDB = FirebaseFirestore.getInstance()
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
     private var statusListAdapter = StatusListAdapter(arrayListOf())
+    private val partnerStatusListenerSet = mutableSetOf<ListenerRegistration>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,12 +72,19 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
         }
     }
 
-    fun onVisible() {
-        statusListAdapter.onRefresh()
-        refreshList()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        removeAllPartnerStatusListeners()
     }
 
-    private fun refreshList() {
+    fun onVisible() {
+        statusListAdapter.onRefresh() // Clear out the old statuses
+        refreshPartnersStatusList(true)
+    }
+
+
+    // Refresh Partner status list and maybe update the list of partners
+    private fun refreshPartnersStatusList(collectPartnerUserIds: Boolean) {
 
         bind.progressBar.visibility = View.VISIBLE
 
@@ -84,9 +93,10 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
             .get()
             .addOnSuccessListener { userDoc ->
 
-                // If there are any chats for this user...
+                // If there are any partner chats for this userId...
                 if (userDoc.contains(DATA_USER_CHATS)) {
                     val partners = userDoc[DATA_USER_CHATS]
+                    if(collectPartnerUserIds) removeAllPartnerStatusListeners()
 
                     @Suppress("UNCHECKED_CAST")
                     for (partnerId in (partners as HashMap<String, String>).keys) {
@@ -98,6 +108,7 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
                                 val partner = partnerUserDoc.toObject(User::class.java)
 
                                 partner?.let {
+                                    // Show a status only if there is a status message or image
                                     if (!partner.statusMessage.isNullOrEmpty() || !partner.statusUrl.isNullOrEmpty()) {
                                         val item = StatusListItem(
                                             username = partner.username,
@@ -108,6 +119,20 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
                                             statusDate = partner.statusDate
                                         )
                                         statusListAdapter.addItem(item)
+                                    }
+
+                                    // Listen for changes to partners status changes
+                                    if(collectPartnerUserIds) {
+                                        val partnerStatusListener =
+                                            firebaseDB.collection(DATA_USERS_COLLECTION)
+                                                .document(partnerId)
+                                                .addSnapshotListener { _, firebaseFirestoreException ->
+                                                    if (firebaseFirestoreException == null) {
+                                                        statusListAdapter.onRefresh() // Clear out the old statuses
+                                                        refreshPartnersStatusList(false)
+                                                    }
+                                                }
+                                        partnerStatusListenerSet.add(partnerStatusListener)
                                     }
                                 }
                             }
@@ -120,6 +145,12 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
                 Toast.makeText(activity, "Error updating status. Please try again later.", Toast.LENGTH_LONG).show()
                 e.printStackTrace()
             }
+    }
+    private fun removeAllPartnerStatusListeners() {
+        for(partnerStatusListener in partnerStatusListenerSet) {
+            partnerStatusListener.remove()
+        }
+        partnerStatusListenerSet.clear()
     }
 
     override fun onItemClicked(statusItem: StatusListItem) {

@@ -38,7 +38,7 @@ class StatusActivity : AppCompatActivity() {
         bind.statusIv.loadUrl(statusItem.statusUrl)
 
         bind.progressBar.max = 100
-        val errorHandler = CoroutineExceptionHandler { context, throwable->
+        val errorHandler = CoroutineExceptionHandler { coContext, throwable->
             simpleErrorMessageDialog( this@StatusActivity,"An Error occurred: ${throwable.localizedMessage}")
         }
         timerScope.launch(errorHandler) {
@@ -62,12 +62,13 @@ class StatusActivity : AppCompatActivity() {
     }
 
     private fun onProgressUpdate(progress: Int) {
+        if(progress > 100) throw IllegalStateException("Cannot set progress over 100.")
+        if(progress < 0) throw IllegalStateException("Cannot set progress under 0.")
+
         bind.progressBar.progress = progress
         if(progress == 100) {
             finish()
         }
-        if(progress > 100) throw IllegalStateException("Cannot set progress over 100.")
-        if(progress < 0) throw IllegalStateException("Cannot set progress under 0.")
     }
 
     companion object {

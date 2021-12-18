@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.realityexpander.whatsupp.R
 import com.realityexpander.whatsupp.listener.StatusItemClickListener
@@ -46,15 +47,25 @@ class StatusListAdapter(val statusList: ArrayList<StatusListItem>):
 
         private val layout = view.findViewById<RelativeLayout>(R.id.itemLayout)
         private val profileImageIv = view.findViewById<ImageView>(R.id.profileImageIv)
+        private val statusImageCv = view.findViewById<CardView>(R.id.statusImageCv)
+        private val statusImageIv = view.findViewById<ImageView>(R.id.statusImageIv)
         private val usernameTv = view.findViewById<TextView>(R.id.usernameTv)
         private val statusMessageTv = view.findViewById<TextView>(R.id.statusMessageTv)
         private val statusDateTv = view.findViewById<TextView>(R.id.statusDateTV)
+
 
         fun bind(item: StatusListItem, listener: StatusItemClickListener?) {
             profileImageIv.loadUrl(item.profileImageUrl, R.drawable.default_user)
             usernameTv.text = item.username
             statusDateTv.text = item.statusDate
             statusMessageTv.text = item.statusMessage
+            if(!item.statusUrl.isNullOrEmpty()) {
+                statusImageCv.visibility = View.VISIBLE
+                statusImageIv.loadUrl(item.statusUrl)
+            } else {
+                statusImageCv.visibility = View.INVISIBLE
+            }
+
             layout?.setOnClickListener {listener?.onItemClicked(item)}
         }
     }

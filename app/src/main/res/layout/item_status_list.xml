@@ -24,7 +24,31 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/content_description_profile_image"
                 android:scaleType="centerCrop" />
+
     </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.card.MaterialCardView
+            android:id="@+id/statusImageCv"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignEnd="@id/itemCv"
+            android:layout_alignBottom="@id/itemCv"
+            android:visibility="invisible"
+            app:strokeColor="@color/design_default_color_on_secondary"
+            app:strokeWidth="2dp"
+            app:cardCornerRadius="@dimen/chat_image_radius"
+            app:cardElevation="5dp"
+            tool:visibility="visible">
+
+        <ImageView
+                android:id="@+id/statusImageIv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/content_description_profile_image"
+                android:elevation="10dp"
+                android:scaleType="centerCrop"
+                tool:background="@drawable/default_user" />
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"

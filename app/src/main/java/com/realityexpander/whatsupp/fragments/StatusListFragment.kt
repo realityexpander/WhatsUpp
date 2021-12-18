@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.realityexpander.whatsupp.activities.MainActivity
+import com.realityexpander.whatsupp.activities.StatusActivity
 import com.realityexpander.whatsupp.adapters.StatusListAdapter
 import com.realityexpander.whatsupp.databinding.FragmentStatusListBinding
+import com.realityexpander.whatsupp.listener.StatusItemClickListener
 import com.realityexpander.whatsupp.util.DATA_USERS_COLLECTION
 import com.realityexpander.whatsupp.util.DATA_USER_CHATS
 import com.realityexpander.whatsupp.util.StatusListItem
@@ -23,7 +25,7 @@ import com.realityexpander.whatsupp.util.User
  * Use the [StatusListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class StatusListFragment : Fragment() {
+class StatusListFragment : Fragment(), StatusItemClickListener {
 
     private var _bind: FragmentStatusListBinding? = null
     private val bind: FragmentStatusListBinding
@@ -54,6 +56,7 @@ class StatusListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        statusListAdapter.setOnItemClickListener(this)
         bind.statusListRV.apply {
             setHasFixedSize(false)
             layoutManager = LinearLayoutManager(context)
@@ -114,10 +117,13 @@ class StatusListFragment : Fragment() {
             }
             .addOnFailureListener { e->
                 bind.progressBar.visibility = View.GONE
-                Toast.makeText(activity, "Error updating status. PLease try again later.", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "Error updating status. Please try again later.", Toast.LENGTH_LONG).show()
                 e.printStackTrace()
             }
     }
 
+    override fun onItemClicked(statusItem: StatusListItem) {
+        startActivity(StatusActivity.getIntent(context, statusItem))
+    }
 
 }

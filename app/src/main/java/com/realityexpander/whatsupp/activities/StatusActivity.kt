@@ -2,26 +2,23 @@ package com.realityexpander.whatsupp.activities
 
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.google.firebase.firestore.core.ActivityScope
 import com.realityexpander.whatsupp.databinding.ActivityStatusBinding
-import com.realityexpander.whatsupp.listener.ProgressListener
 import com.realityexpander.whatsupp.util.StatusListItem
 import com.realityexpander.whatsupp.util.loadUrl
 import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
 
 const val PARAM_STATUS_ELEMENT = "element"
 
-class StatusActivity : AppCompatActivity(), CoroutineScope {
+class StatusActivity : AppCompatActivity() /*, CoroutineScope*/ {
     private lateinit var bind: ActivityStatusBinding
     private lateinit var statusElement: StatusListItem
 
-    override val coroutineContext = Job() + Dispatchers.Main
+//    override val coroutineContext = Job() + Dispatchers.Main
+//    val mainScope = MainScope()
+    val timerScope = CoroutineScope(Job() + Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,12 +36,12 @@ class StatusActivity : AppCompatActivity(), CoroutineScope {
         bind.statusIv.loadUrl(statusElement.statusUrl)
 
         bind.progressBar.max = 100
-//        TimerTask(this).execute("")
-
         val errorHandler = CoroutineExceptionHandler {
             context, throwable->
         }
-        launch(errorHandler) {
+//        coroutineContext
+//        mainScope.launch(errorHandler) {
+        timerScope.launch(errorHandler) {
             withContext(Dispatchers.IO) {
                 for(i in 1..100) {
                     delay(30)
@@ -52,7 +49,16 @@ class StatusActivity : AppCompatActivity(), CoroutineScope {
                 }
             }
         }
+    }
 
+    override fun onStop() {
+        super.onStop()
+        timerScope.cancel()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timerScope.cancel()
     }
 
     private fun onProgressUpdate(progress: Int) {
@@ -61,24 +67,6 @@ class StatusActivity : AppCompatActivity(), CoroutineScope {
             finish()
         }
     }
-
-//    private class TimerTask(val listener: ProgressListener): AsyncTask<String, Int, Any>() {
-//        override fun doInBackground(vararg params: String?) {
-//            var i = 0
-//            val sleep = 30L
-//            while (i < 100) {
-//                i++
-//                publishProgress(i)
-//                Thread.sleep(sleep)
-//            }
-//        }
-//
-//        override fun onProgressUpdate(vararg values: Int?) {
-//            if(values[0] != null) {
-//                listener.onProgressUpdate(values[0]!!)
-//            }
-//        }
-//    }
 
     companion object {
         fun getIntent(context: Context?, statusElement: StatusListItem): Intent {

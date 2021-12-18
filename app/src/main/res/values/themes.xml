@@ -54,6 +54,13 @@
         <item name="android:textColor">@color/design_default_color_on_secondary</item>
     </style>
 
+    <style name="SmallText">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAlignment">textEnd</item>
+        <item name="android:layout_gravity">end</item>
+    </style>
+
+
     <style name="Title">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>

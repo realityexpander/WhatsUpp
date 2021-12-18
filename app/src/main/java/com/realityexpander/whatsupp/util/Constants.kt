@@ -17,12 +17,12 @@ const val CONVERSATIONS_PARAM_CHAT_NAME = "Chat name"
 ///////// FIREBASE STORAGE /////////
 
 // Images Data Store
-val DATA_IMAGES = "Images"
+const val DATA_IMAGES = "Images"
 
 
 ///////// FIREBASE CLOUD FIRESTORE ///////
 
-// Users collection
+// Users collection (Models.kt: User)
 const val DATA_USERS_COLLECTION = "users" // userId & partnerUserId
 const val DATA_USER_EMAIL = "email"
 const val DATA_USER_USERNAME = "username"
@@ -30,14 +30,16 @@ const val DATA_USER_PHONE = "phone"
 const val DATA_USER_UID = "uid"
 const val DATA_USER_PROFILE_IMAGE_URL = "profileImageUrl"
 const val DATA_USER_STATUS_URL = "statusUrl"
+const val DATA_USER_STATUS_MESSAGE = "statusMessage"
 const val DATA_USER_STATUS_TIMESTAMP = "statusTimestamp"
+const val DATA_USER_STATUS_DATE = "statusDate"
   // subdocument: /chats
 const val DATA_USER_CHATS = "userChats"  // Map of partnerUserId -> chatId
 
-// Chats collection
+// Chats collection (Models.kt: Chat)
 const val DATA_CHATS_COLLECTION = "chats" // chatId
   // sub-document: /chatParticipants
 const val DATA_CHAT_PARTICIPANTS = "chatParticipants"  // Array of userId
-  // sub-collection: messages
+  // sub-collection: messages (Models.kt: Message)
 const val DATA_CHAT_MESSAGES_COLLECTION = "messages" // Array of Message
 const val DATA_CHAT_MESSAGE_TIMESTAMP = "timestamp"

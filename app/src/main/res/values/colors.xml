@@ -13,6 +13,7 @@
     <color name="grey">#CCCCCC</color>
     <color name="transparent_white">#CCFFFFFF</color>
     <color name="transparent_grey">#99CCCCCC</color>
+    <color name="transparent_light">#11FFFFFF</color>
 
     <color name="colorPrimary">#FF085f57</color>
     <color name="colorPrimaryDark">#FF064c44</color>

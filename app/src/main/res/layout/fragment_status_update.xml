@@ -20,13 +20,13 @@
                     android:layout_height="@dimen/send_height"
                     android:text="@string/button_update_status"
                     style="@style/SendButton"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:layout_margin="@dimen/grid_1x"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
             <EditText
-                    android:id="@+id/statusET"
+                    android:id="@+id/status_et"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/send_min_height"
@@ -35,20 +35,23 @@
                     app:layout_constraintEnd_toStartOf="@+id/sendStatusButton"
                     app:layout_constraintStart_toStartOf="parent"
                     android:hint="@string/hint_status"
+                    android:inputType="textMultiLine"
                     android:padding="@dimen/grid_1x"
                     android:layout_margin="@dimen/grid_1x"
-                    android:gravity="center_vertical"/>
+                    android:gravity="center_vertical"
+                    android:importantForAutofill="no" />
 
             <ImageView
-                    android:id="@+id/statusIV"
+                    android:id="@+id/status_iv"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:scaleType="center"
+                    android:contentDescription="@string/content_description_status_image"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toTopOf="@+id/status_et"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/statusET"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:contentDescription="@string/content_description_status_image" />
+                    tools:ignore="ImageContrastCheck" />
 
             <LinearLayout
                     android:id="@+id/progressLayout"

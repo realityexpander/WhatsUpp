@@ -27,5 +27,5 @@
     <dimen name="send_width">100dp</dimen>
     <dimen name="send_height">75dp</dimen>
     <dimen name="send_min_height">75dp</dimen>
-    <dimen name="send_max_height">150dp</dimen>
+    <dimen name="send_max_height">120dp</dimen>
 </resources>

@@ -103,13 +103,13 @@ class SignupActivity : AppCompatActivity() {
                         val phone = bind.phoneET.text.toString()
                         val name = bind.nameET.text.toString()
                         val user = User(
-                            email,
-                            name,
-                            phone,
-                            firebaseAuth.uid,
+                            email = email,
+                            username = name,
+                            phone = phone,
+                            uid = firebaseAuth.uid,
                             "",
-                            "Hello, I'm new.",
-                            System.currentTimeMillis().toString())
+                            statusMessage = "Hello, I'm new.",
+                            statusTimestamp = System.currentTimeMillis().toString())
 
                         // Save to database
                         firebaseDB.collection(DATA_USERS_COLLECTION)

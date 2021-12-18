@@ -64,7 +64,7 @@ fun Long?.getDateString(): String {
     return sdf.format(resultDate).lowercase(Locale.US)
 }
 
-fun getTime(): String {
+fun getCurrentDateString(): String {
     val df = DateFormat.getDateInstance()
     return df.format(Date())
 }

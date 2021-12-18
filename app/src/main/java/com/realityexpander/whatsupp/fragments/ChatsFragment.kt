@@ -10,10 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.realityexpander.whatsupp.activities.ConversationActivity
+import com.realityexpander.whatsupp.activities.MainActivity
 import com.realityexpander.whatsupp.adapters.ChatsAdapter
 import com.realityexpander.whatsupp.databinding.FragmentChatsBinding
 import com.realityexpander.whatsupp.listener.ChatsClickListener
-import com.realityexpander.whatsupp.listener.FailureCallback
+import com.realityexpander.whatsupp.listener.UserNotLoggedInError
 import com.realityexpander.whatsupp.util.Chat
 import com.realityexpander.whatsupp.util.DATA_CHATS_COLLECTION
 import com.realityexpander.whatsupp.util.DATA_USERS_COLLECTION
@@ -32,7 +33,6 @@ class ChatsFragment : Fragment(), ChatsClickListener {
     private var chatsAdapter = ChatsAdapter(arrayListOf())
     private val firebaseDB = FirebaseFirestore.getInstance()
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
-    private var failureCallback: FailureCallback? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,12 +48,8 @@ class ChatsFragment : Fragment(), ChatsClickListener {
 
         // Make sure user is logged in
         if (userId.isNullOrEmpty()) {
-            failureCallback?.onUserError()
+            (activity as MainActivity).onUserNotLoggedInError()
         }
-    }
-
-    fun setFailureCallbackListener(listener: FailureCallback) {
-        failureCallback = listener
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

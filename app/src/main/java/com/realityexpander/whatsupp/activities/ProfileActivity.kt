@@ -104,7 +104,7 @@ class ProfileActivity : AppCompatActivity() {
                 bind.emailAddress.setText(currentUser?.email)
                 bind.nameET.setText(currentUser?.username)
                 bind.phoneET.setText(currentUser?.phone)
-                currentUser?.profileImageUrl.let {
+                currentUser?.profileImageUrl?.let {
                     bind.profileImageIv.loadUrl(currentUser?.profileImageUrl,
                         R.drawable.default_user)
                 }

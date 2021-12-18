@@ -29,8 +29,10 @@ class StatusUpdateFragment : Fragment() {
 
     private val firebaseDB = FirebaseFirestore.getInstance()
     private val firebaseStorage = FirebaseStorage.getInstance().reference
-    private val userId = FirebaseAuth.getInstance().currentUser?.uid
-    private var statusImageUrl = ""
+    private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+
+    private var pickedImageUri: Uri? = null // uri to an image file on android device before updating status
+    private var savedStatusImageUrl = "" // url in firestore db after the user updates status
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,68 +50,109 @@ class StatusUpdateFragment : Fragment() {
         bind.progressLayout.setOnTouchListener { _, _ -> true }
         bind.sendStatusButton.setOnClickListener { onUpdate() }
 
-        bind.statusIv.loadUrl(statusImageUrl, R.drawable.default_user)
+//        bind.statusIv.loadUrl(savedStatusImageUrl, R.drawable.default_user)
 
         bind.statusLayout.setOnClickListener { _ ->
-            if(isAdded) {
+            if (isAdded) {
                 startImagePickerActivity { imageUri ->
-                    storeStatusImage(imageUri)
+                    pickedImageUri = imageUri
+
+                    // preview the status Image, only save upon user performing status update
+                    bind.statusIv.loadUrl(pickedImageUri.toString(), R.drawable.default_user)
                 }
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Make sure user is logged in
-        if (userId.isNullOrEmpty()) {
+        if (currentUserId.isNullOrEmpty()) {
             (activity as MainActivity).onUserNotLoggedInError()
         }
+    }
+
+    fun onVisible() {
+        bind.progressLayout.visibility = View.VISIBLE
+
+        // Populate with the current user status
+        firebaseDB.collection(DATA_USERS_COLLECTION).document(currentUserId!!).get()
+            .addOnSuccessListener { documentSnapshot ->
+                val currentUser = documentSnapshot.toObject(User::class.java)
+
+                bind.statusEt.setText(currentUser?.statusMessage)
+                currentUser?.statusUrl?.let { statusImageUrl ->
+                    bind.statusIv.loadUrl(statusImageUrl)
+                    savedStatusImageUrl = statusImageUrl
+                }
+                bind.progressLayout.visibility = View.GONE
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    activity,
+                    "Error retrieving user data. Please try again later.",
+                    Toast.LENGTH_LONG
+                ).show()
+                e.printStackTrace()
+            }
     }
 
     private fun onUpdate() {
         bind.progressLayout.visibility = View.VISIBLE
         val updateMap = HashMap<String, Any>()
 
+        // save the new status image, if there is one.
+        pickedImageUri?.let {
+            storeStatusImage(pickedImageUri)
+            pickedImageUri = null // to prevent duplicate uploads of same file
+        }
+
         updateMap[DATA_USER_STATUS_MESSAGE] = bind.statusEt.text.toString()
-        updateMap[DATA_USER_STATUS_URL] = statusImageUrl
+        updateMap[DATA_USER_STATUS_URL] = savedStatusImageUrl
         updateMap[DATA_USER_STATUS_DATE] = getCurrentDateString()
         updateMap[DATA_USER_STATUS_TIMESTAMP] = System.currentTimeMillis().toString()
 
         firebaseDB.collection(DATA_USERS_COLLECTION)
-            .document(userId!!)
+            .document(currentUserId!!)
             .update(updateMap)
             .addOnSuccessListener {
                 Toast.makeText(activity, "Status updated!", Toast.LENGTH_SHORT).show()
                 bind.progressLayout.visibility = View.GONE
             }
-            .addOnFailureListener { e->
+            .addOnFailureListener { e ->
                 bind.progressLayout.visibility = View.GONE
-                Toast.makeText(activity, "Error updating status. PLease try again later.", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    activity,
+                    "Error updating status. PLease try again later.",
+                    Toast.LENGTH_LONG
+                ).show()
                 e.printStackTrace()
             }
     }
 
-    private fun storeStatusImage(imageUri: Uri) {
-        statusImageUrl = imageUri.toString()
-        bind.statusIv.loadUrl(statusImageUrl, R.drawable.default_user) // optimistically load the status Image
+    private fun storeStatusImage(imageUri: Uri?) {
+        if (imageUri == null) return
 
         Toast.makeText(activity, "Uploading Status Image...", Toast.LENGTH_SHORT).show()
         bind.progressLayout.visibility = View.VISIBLE
 
         fun onUploadImageFailure(e: Exception) {
-            Toast.makeText(activity, "Error uploading image. Please try again later.", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                activity,
+                "Error uploading image. Please try again later.",
+                Toast.LENGTH_LONG
+            ).show()
             bind.progressLayout.visibility = View.GONE
             e.printStackTrace()
         }
 
         // 1. Upload the file
         val filepath = firebaseStorage.child(DATA_IMAGES)
-            .child("${userId}_status")
+            .child("${currentUserId}_status")
         filepath.putFile(imageUri)
             .addOnSuccessListener {
+                Toast.makeText(activity, "File uploaded!", Toast.LENGTH_SHORT).show()
 
                 // 2. Download the statusImage file
                 filepath.downloadUrl
@@ -118,23 +161,25 @@ class StatusUpdateFragment : Fragment() {
 
                         // 3. Save the statusImage URL to the user record in the database
                         firebaseDB.collection(DATA_USERS_COLLECTION)
-                            .document(userId!!)
+                            .document(currentUserId!!)
                             .update(DATA_USER_STATUS_URL, savedFileUrl)
                             .addOnSuccessListener {
-                                statusImageUrl = savedFileUrl
-                                bind.statusIv.loadUrl(statusImageUrl) // load the newly saved image
+                                savedStatusImageUrl = savedFileUrl
+
+                                // load the newly saved image from the firebase storage
+                                bind.statusIv.loadUrl(savedStatusImageUrl)
 
                                 bind.progressLayout.visibility = View.GONE
                             }
-                            .addOnFailureListener { e->
+                            .addOnFailureListener { e ->
                                 onUploadImageFailure(e)
                             }
                     }
-                    .addOnFailureListener { e->
+                    .addOnFailureListener { e ->
                         onUploadImageFailure(e)
                     }
             }
-            .addOnFailureListener { e->
+            .addOnFailureListener { e ->
                 onUploadImageFailure(e)
             }
     }
@@ -147,7 +192,8 @@ class StatusUpdateFragment : Fragment() {
                 imagePickerResultCallback(uri)
             }
         }
-    private fun startImagePickerActivity(imagePickerResultCallback: (uri: Uri) -> Unit ) {
+
+    private fun startImagePickerActivity(imagePickerResultCallback: (uri: Uri) -> Unit) {
         this.imagePickerResultCallback = imagePickerResultCallback
         imagePickerForResultLauncher.launch(arrayOf("image/*")) // Launch Image Picker
     }

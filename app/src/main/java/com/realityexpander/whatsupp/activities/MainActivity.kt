@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity(), UserNotLoggedInError {
                 when (tab?.position) {
                     0 -> {
                         bind.fab.hide()
+                        statusUpdateFragment.onVisible()
                     }
                     1 -> {
                         bind.fab.show()

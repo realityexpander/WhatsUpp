@@ -8,43 +8,43 @@ import android.widget.Toast
 import com.realityexpander.whatsupp.databinding.ActivityStatusBinding
 import com.realityexpander.whatsupp.util.StatusListItem
 import com.realityexpander.whatsupp.util.loadUrl
+import com.realityexpander.whatsupp.util.simpleErrorMessageDialog
 import kotlinx.coroutines.*
 
-const val PARAM_STATUS_ELEMENT = "element"
+const val PARAM_STATUS_ITEM = "status item"
+const val SHOW_STATUS_TIME_MS = 3000 // total time to show status in ms
 
-class StatusActivity : AppCompatActivity() /*, CoroutineScope*/ {
+class StatusActivity : AppCompatActivity() {
     private lateinit var bind: ActivityStatusBinding
-    private lateinit var statusElement: StatusListItem
+    private lateinit var statusItem: StatusListItem
 
-//    override val coroutineContext = Job() + Dispatchers.Main
-//    val mainScope = MainScope()
-    val timerScope = CoroutineScope(Job() + Dispatchers.Main)
+    private val timerScope = CoroutineScope(Job() + Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind = ActivityStatusBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
-        if(intent.hasExtra(PARAM_STATUS_ELEMENT)) {
-            statusElement = intent.getParcelableExtra(PARAM_STATUS_ELEMENT)!!
+        // Get Status Item Object
+        if(intent.hasExtra(PARAM_STATUS_ITEM)) {
+            statusItem = intent.getParcelableExtra(PARAM_STATUS_ITEM)!!
         } else {
             Toast.makeText(this, "Unable to get status", Toast.LENGTH_SHORT).show()
             finish()
         }
 
-        bind.statusTv.text = statusElement.statusMessage
-        bind.statusIv.loadUrl(statusElement.statusUrl)
+        bind.statusTv.text = statusItem.statusMessage
+        bind.statusDateTv.text = statusItem.statusDate
+        bind.statusIv.loadUrl(statusItem.statusUrl)
 
         bind.progressBar.max = 100
-        val errorHandler = CoroutineExceptionHandler {
-            context, throwable->
+        val errorHandler = CoroutineExceptionHandler { context, throwable->
+            simpleErrorMessageDialog( this@StatusActivity,"An Error occurred: ${throwable.localizedMessage}")
         }
-//        coroutineContext
-//        mainScope.launch(errorHandler) {
         timerScope.launch(errorHandler) {
             withContext(Dispatchers.IO) {
                 for(i in 1..100) {
-                    delay(30)
+                    delay(SHOW_STATUS_TIME_MS / 100L)
                     onProgressUpdate(i)
                 }
             }
@@ -66,12 +66,14 @@ class StatusActivity : AppCompatActivity() /*, CoroutineScope*/ {
         if(progress == 100) {
             finish()
         }
+        if(progress > 100) throw IllegalStateException("Cannot set progress over 100.")
+        if(progress < 0) throw IllegalStateException("Cannot set progress under 0.")
     }
 
     companion object {
-        fun getIntent(context: Context?, statusElement: StatusListItem): Intent {
+        fun getIntent(context: Context?, statusItem: StatusListItem): Intent {
             val intent = Intent(context, StatusActivity::class.java)
-            intent.putExtra(PARAM_STATUS_ELEMENT, statusElement)
+            intent.putExtra(PARAM_STATUS_ITEM, statusItem)
             return intent
         }
     }

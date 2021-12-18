@@ -2,6 +2,7 @@ package com.realityexpander.whatsupp.util
 
 import android.content.Context
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -18,7 +19,7 @@ import java.util.*
 
 
 fun ImageView.loadUrl(url: String?, errorDrawable: Int = R.drawable.empty) {
-    if(url.isNullOrEmpty()) return
+    if (url.isNullOrEmpty()) return
 
     context?.let {
         val options = RequestOptions()
@@ -26,7 +27,7 @@ fun ImageView.loadUrl(url: String?, errorDrawable: Int = R.drawable.empty) {
             .placeholder(progressDrawable(context))
             .fallback(progressDrawable(context))
             .error(errorDrawable)
-            .override(1000,750)
+            .override(1000, 750)
             .fitCenter()
 
         CoroutineScope(Dispatchers.Main).launch {
@@ -39,7 +40,7 @@ fun ImageView.loadUrl(url: String?, errorDrawable: Int = R.drawable.empty) {
     }
 }
 
-fun progressDrawable(context: Context) : CircularProgressDrawable {
+fun progressDrawable(context: Context): CircularProgressDrawable {
     return CircularProgressDrawable(context).apply {
         strokeWidth = 5f
         centerRadius = 30f
@@ -67,4 +68,14 @@ fun Long?.getDateString(): String {
 fun getCurrentDateString(): String {
     val df = DateFormat.getDateInstance()
     return df.format(Date())
+}
+
+fun simpleErrorMessageDialog(context: Context, errorMessage: String) {
+    AlertDialog.Builder(
+        context,
+        com.google.android.material.R.style.Base_Theme_MaterialComponents_Dialog
+    )
+        .setTitle(errorMessage)
+        .setPositiveButton("OK") { _, _ -> }
+        .show()
 }

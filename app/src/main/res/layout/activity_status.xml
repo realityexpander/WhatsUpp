@@ -28,6 +28,19 @@
             android:layout_centerVertical="true"
             android:textColor="@color/white"/>
 
+    <TextView
+            android:id="@+id/statusDateTv"
+            style="@style/SmallText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent_grey"
+            android:gravity="center"
+            android:textAlignment="center"
+            tools:text="Dec 18, 2021"
+            android:textColor="@color/white" />
+
     <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"

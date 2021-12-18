@@ -229,10 +229,7 @@ class MainActivity : AppCompatActivity(), UserNotLoggedInError {
                             // Found valid partner with phone number, so start a new chat
                             chatsFragment.newChat(partnerId)
                         } else {
-                            AlertDialog.Builder(this, Base_Theme_MaterialComponents_Dialog)
-                                .setTitle("Can't send messages to self.")
-                                .setPositiveButton("OK") { _, _ -> }
-                                .show()
+                            simpleErrorMessageDialog( this@MainActivity,"Can't send messages to yourself.")
                         }
                     } else {
                         // Invite the new user via SMS

@@ -82,7 +82,7 @@ class StatusUpdateFragment : Fragment() {
                 val currentUser = documentSnapshot.toObject(User::class.java)
 
                 bind.statusEt.setText(currentUser?.statusMessage)
-                currentUser?.statusUrl?.let { statusImageUrl ->
+                currentUser?.statusImageUrl?.let { statusImageUrl ->
                     bind.statusIv.loadUrl(statusImageUrl)
                     savedStatusImageUrl = statusImageUrl
                 }

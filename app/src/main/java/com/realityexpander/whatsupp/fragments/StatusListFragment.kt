@@ -78,7 +78,7 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
     }
 
     fun onVisible() {
-        statusListAdapter.onRefresh() // Clear out the old statuses
+        statusListAdapter.onClearList() // Clear out the old statuses
         refreshPartnersStatusList(true)
     }
 
@@ -109,11 +109,11 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
 
                                 partner?.let {
                                     // Show a status only if there is a status message or image
-                                    if (!partner.statusMessage.isNullOrEmpty() || !partner.statusUrl.isNullOrEmpty()) {
+                                    if (!partner.statusMessage.isNullOrEmpty() || !partner.statusImageUrl.isNullOrEmpty()) {
                                         val item = StatusListItem(
                                             username = partner.username,
                                             profileImageUrl = partner.profileImageUrl,
-                                            statusUrl = partner.statusUrl,
+                                            statusUrl = partner.statusImageUrl,
                                             statusMessage = partner.statusMessage,
                                             statusTimestamp = partner.statusTimestamp,
                                             statusDate = partner.statusDate
@@ -121,14 +121,14 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
                                         statusListAdapter.addItem(item)
                                     }
 
-                                    // Listen for changes to partners status changes
+                                    // setup Listeners for changes to partners status changes
                                     if(collectPartnerUserIds) {
                                         val partnerStatusListener =
                                             firebaseDB.collection(DATA_USERS_COLLECTION)
                                                 .document(partnerId)
-                                                .addSnapshotListener { _, firebaseFirestoreException ->
-                                                    if (firebaseFirestoreException == null) {
-                                                        statusListAdapter.onRefresh() // Clear out the old statuses
+                                                .addSnapshotListener { partnerDoc, firebaseFirestoreException ->
+                                                    if (firebaseFirestoreException == null && partnerDoc?.metadata?.isFromCache == false) {
+                                                        statusListAdapter.onClearList() // Clear out the old statuses
                                                         refreshPartnersStatusList(false)
                                                     }
                                                 }
@@ -137,8 +137,8 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
                                 }
                             }
                     }
-                    bind.progressBar.visibility = View.GONE
                 }
+                bind.progressBar.visibility = View.GONE
             }
             .addOnFailureListener { e->
                 bind.progressBar.visibility = View.GONE

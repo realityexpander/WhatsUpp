@@ -38,7 +38,7 @@ class StatusActivity : AppCompatActivity() {
         bind.statusIv.loadUrl(statusItem.statusUrl)
 
         bind.progressBar.max = 100
-        val errorHandler = CoroutineExceptionHandler { coContext, throwable->
+        val errorHandler = CoroutineExceptionHandler { coroutineContext, throwable->
             simpleErrorMessageDialog( this@StatusActivity,"An Error occurred: ${throwable.localizedMessage}")
         }
         timerScope.launch(errorHandler) {

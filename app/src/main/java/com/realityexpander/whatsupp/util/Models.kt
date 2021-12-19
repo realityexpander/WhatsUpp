@@ -9,7 +9,7 @@ data class User (
     val phone: String? = "",
     val uid: String? = "",
     val profileImageUrl: String? = "",
-    val statusUrl: String? = "",
+    val statusImageUrl: String? = "",
     val statusMessage: String? = "",
     val statusTimestamp: String = "",
     val statusDate: String = ""

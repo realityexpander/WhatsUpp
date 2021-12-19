@@ -22,9 +22,9 @@ class StatusListAdapter(val statusList: ArrayList<StatusListItem>):
         LayoutInflater.from(parent.context).inflate(R.layout.item_status_list, parent, false)
     )
 
-    fun onRefresh() {
+    fun onClearList() {
         statusList.clear()
-        notifyDataSetChanged()
+//        notifyDataSetChanged()
     }
 
     fun addItem(item: StatusListItem) {

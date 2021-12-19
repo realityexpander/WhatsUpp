@@ -29,12 +29,12 @@ const val DATA_USER_USERNAME = "username"
 const val DATA_USER_PHONE = "phone"
 const val DATA_USER_UID = "uid"
 const val DATA_USER_PROFILE_IMAGE_URL = "profileImageUrl"
-const val DATA_USER_STATUS_URL = "statusUrl"
+const val DATA_USER_STATUS_URL = "statusImageUrl"
 const val DATA_USER_STATUS_MESSAGE = "statusMessage"
 const val DATA_USER_STATUS_TIMESTAMP = "statusTimestamp"
 const val DATA_USER_STATUS_DATE = "statusDate"
-  // subdocument: /chats
-const val DATA_USER_CHATS = "userChats"  // Map of partnerUserId -> chatId
+  // sub-document: /chats
+const val DATA_USER_CHATS = "userchats"  // Map of partnerUserId -> chatId
 
 // Chats collection (Models.kt: Chat)
 const val DATA_CHATS_COLLECTION = "chats" // chatId

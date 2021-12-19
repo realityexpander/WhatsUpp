@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.realityexpander.whatsupp.R
-import com.realityexpander.whatsupp.util.Message
+import com.realityexpander.whatsupp.utils.Message
 
 const val MESSAGE_CURRENT_USER = 1
 const val MESSAGE_PARTNER_USER = 2

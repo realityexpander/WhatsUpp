@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.realityexpander.whatsupp.adapters.ContactsAdapter
 import com.realityexpander.whatsupp.databinding.ActivityContactsBinding
-import com.realityexpander.whatsupp.listener.ContactsClickListener
-import com.realityexpander.whatsupp.util.CONTACTS_PARAM_NAME
-import com.realityexpander.whatsupp.util.CONTACTS_PARAM_PHONE
-import com.realityexpander.whatsupp.util.Contact
+import com.realityexpander.whatsupp.listeners.ContactsClickListener
+import com.realityexpander.whatsupp.utils.CONTACTS_PARAM_NAME
+import com.realityexpander.whatsupp.utils.CONTACTS_PARAM_PHONE
+import com.realityexpander.whatsupp.utils.Contact
 
 class ContactsActivity : AppCompatActivity(), ContactsClickListener {
 

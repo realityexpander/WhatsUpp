@@ -15,14 +15,15 @@ import com.google.firebase.storage.FirebaseStorage
 import com.realityexpander.whatsupp.R
 import com.realityexpander.whatsupp.activities.MainActivity
 import com.realityexpander.whatsupp.databinding.FragmentStatusUpdateBinding
-import com.realityexpander.whatsupp.util.*
+import com.realityexpander.whatsupp.interfaces.UpdateUIExternally
+import com.realityexpander.whatsupp.utils.*
 
 /**
  * A simple [Fragment] subclass.
  * Use the [StatusUpdateFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class StatusUpdateFragment : Fragment() {
+class StatusUpdateFragment: BaseFragment(), UpdateUIExternally {
     private var _bind: FragmentStatusUpdateBinding? = null
     private val bind: FragmentStatusUpdateBinding
         get() = _bind!!
@@ -46,6 +47,14 @@ class StatusUpdateFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility") // for progressLayout touch event blocker
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        savedInstanceState?.apply {
+            // After process death, pass this System-created fragment to HostContext
+            hostContextI?.onAndroidFragmentCreated(this@StatusUpdateFragment)
+
+            // not needed yet
+            // onViewStateRestored(savedInstanceState)
+        }
 
         bind.progressLayout.setOnTouchListener { _, _ -> true }
         bind.sendStatusButton.setOnClickListener { onUpdate() }
@@ -73,7 +82,7 @@ class StatusUpdateFragment : Fragment() {
         }
     }
 
-    fun onVisible() {
+    override fun onUpdateUI() {
         bind.progressLayout.visibility = View.VISIBLE
 
         // Populate with the current user status

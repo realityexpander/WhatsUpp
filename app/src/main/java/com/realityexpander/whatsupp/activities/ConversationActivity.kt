@@ -14,7 +14,7 @@ import com.google.firebase.firestore.DocumentChange
 import com.realityexpander.whatsupp.R
 import com.realityexpander.whatsupp.adapters.ConversationAdapter
 import com.realityexpander.whatsupp.databinding.ActivityConversationBinding
-import com.realityexpander.whatsupp.util.*
+import com.realityexpander.whatsupp.utils.*
 
 class ConversationActivity : AppCompatActivity() {
     private lateinit var bind: ActivityConversationBinding

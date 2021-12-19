@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.realityexpander.whatsupp.R
-import com.realityexpander.whatsupp.listener.StatusItemClickListener
-import com.realityexpander.whatsupp.util.StatusListItem
-import com.realityexpander.whatsupp.util.loadUrl
+import com.realityexpander.whatsupp.listeners.StatusItemClickListener
+import com.realityexpander.whatsupp.utils.StatusListItem
+import com.realityexpander.whatsupp.utils.loadUrl
 
 class StatusListAdapter(val statusList: ArrayList<StatusListItem>):
     RecyclerView.Adapter<StatusListAdapter.StatusListViewHolder>() {

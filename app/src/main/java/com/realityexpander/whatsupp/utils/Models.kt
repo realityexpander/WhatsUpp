@@ -1,4 +1,4 @@
-package com.realityexpander.whatsupp.util
+package com.realityexpander.whatsupp.utils
 
 import android.os.Parcel
 import android.os.Parcelable

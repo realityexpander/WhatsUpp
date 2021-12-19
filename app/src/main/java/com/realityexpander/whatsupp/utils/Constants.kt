@@ -1,4 +1,4 @@
-package com.realityexpander.whatsupp.util
+package com.realityexpander.whatsupp.utils
 
 // Permissions
 val REQUEST_PERMISSIONS_READ_CONTACTS = 10001
@@ -43,3 +43,9 @@ const val DATA_CHAT_PARTICIPANTS = "chatParticipants"  // Array of userId
   // sub-collection: messages (Models.kt: Message)
 const val DATA_CHAT_MESSAGES_COLLECTION = "messages" // Array of Message
 const val DATA_CHAT_MESSAGE_TIMESTAMP = "timestamp"
+
+
+///////// SavedInstanceState /////////
+const val MAIN_ACTIVITY_SELECTED_TAB_POSITION = "homeActivity_selectedTabPosition"
+const val SEARCH_FRAGMENT_SHOW_SEARCH_RESULTS = "searchFragment_isSearchResultsDisplayed"
+const val SEARCH_FRAGMENT_CURRENT_HASHTAG_QUERY = "searchFragment_currentHashtagQuery"

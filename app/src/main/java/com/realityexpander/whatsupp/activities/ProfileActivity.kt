@@ -20,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.realityexpander.whatsupp.R
 import com.realityexpander.whatsupp.databinding.ActivityProfileBinding
-import com.realityexpander.whatsupp.util.*
+import com.realityexpander.whatsupp.utils.*
 import java.lang.Exception
 
 

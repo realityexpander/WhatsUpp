@@ -1,4 +1,4 @@
-package com.realityexpander.whatsupp.listener
+package com.realityexpander.whatsupp.listeners
 
 interface UserNotLoggedInError {
     fun onUserNotLoggedInError()

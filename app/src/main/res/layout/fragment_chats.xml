@@ -5,7 +5,7 @@
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".fragments.ChatsFragment">
+            tools:context=".fragments.ChatListFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chatsRv"

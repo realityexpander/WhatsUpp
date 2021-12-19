@@ -1,4 +1,4 @@
-package com.realityexpander.whatsupp.util
+package com.realityexpander.whatsupp.utils
 
 import android.content.Context
 import android.widget.ImageView

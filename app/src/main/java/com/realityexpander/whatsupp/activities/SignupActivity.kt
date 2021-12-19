@@ -13,8 +13,8 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.realityexpander.whatsupp.databinding.ActivitySignupBinding
-import com.realityexpander.whatsupp.util.DATA_USERS_COLLECTION
-import com.realityexpander.whatsupp.util.User
+import com.realityexpander.whatsupp.utils.DATA_USERS_COLLECTION
+import com.realityexpander.whatsupp.utils.User
 
 class SignupActivity : AppCompatActivity() {
 

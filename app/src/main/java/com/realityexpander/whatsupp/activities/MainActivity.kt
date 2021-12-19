@@ -24,25 +24,37 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.realityexpander.whatsupp.R
 import com.realityexpander.whatsupp.databinding.ActivityMainBinding
-import com.realityexpander.whatsupp.fragments.ChatsFragment
+import com.realityexpander.whatsupp.fragments.BaseFragment
+import com.realityexpander.whatsupp.fragments.ChatListFragment
 import com.realityexpander.whatsupp.fragments.StatusListFragment
 import com.realityexpander.whatsupp.fragments.StatusUpdateFragment
-import com.realityexpander.whatsupp.listener.UserNotLoggedInError
-import com.realityexpander.whatsupp.util.*
+import com.realityexpander.whatsupp.interfaces.HostContextI
+import com.realityexpander.whatsupp.listeners.UserNotLoggedInError
+import com.realityexpander.whatsupp.utils.*
 
 
-class MainActivity : AppCompatActivity(), UserNotLoggedInError {
+class MainActivity : AppCompatActivity(),
+    UserNotLoggedInError,
+    HostContextI
+{
     private lateinit var bind: ActivityMainBinding
     private var sectionPagerAdapter: SectionPagerAdapter? = null
-    private val chatsFragment = ChatsFragment()
-    private val statusListFragment = StatusListFragment()
-    private val statusUpdateFragment = StatusUpdateFragment()
+    private var chatsFragment = ChatListFragment()
+    private var statusListFragment = StatusListFragment()
+    private var statusUpdateFragment = StatusUpdateFragment()
 
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val firebaseDB = FirebaseFirestore.getInstance()
 
     companion object {
         fun newIntent(context: Context) = Intent(context, MainActivity::class.java)
+    }
+
+    // Fragment Identifiers
+    private enum class FragmentId {
+        STATUS_UPDATE,
+        CHATS,
+        STATUS_LIST,
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,16 +75,16 @@ class MainActivity : AppCompatActivity(), UserNotLoggedInError {
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
-                    0 -> {
+                    FragmentId.STATUS_UPDATE.ordinal -> {
                         bind.fab.hide()
-                        statusUpdateFragment.onVisible()
+                        statusUpdateFragment.onUpdateUI()
                     }
-                    1 -> {
+                    FragmentId.CHATS.ordinal -> {
                         bind.fab.show()
                     }
-                    2 -> {
+                    FragmentId.STATUS_LIST.ordinal -> {
                         bind.fab.hide()
-                        statusListFragment.onVisible()
+                        statusListFragment.onUpdateUI()
                     }
                 }
             }
@@ -111,6 +123,38 @@ class MainActivity : AppCompatActivity(), UserNotLoggedInError {
         return true
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        println("onSaveInstanceState for MainActivity")
+
+        outState.apply {
+            putInt(MAIN_ACTIVITY_SELECTED_TAB_POSITION, bind.tabs.selectedTabPosition)
+        }
+    }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        println("onRestoreInstanceState for MainActivity")
+
+        savedInstanceState.apply {
+            val selectedTabPosition = getInt(MAIN_ACTIVITY_SELECTED_TAB_POSITION)
+            sectionPagerAdapter?.selectTabLayoutItem(selectedTabPosition)
+        }
+    }
+    // After process death recovery fragment creation, update the fragment vars
+    override fun onAndroidFragmentCreated(fragment: BaseFragment) {
+
+        // note: newBlitterFragment type is created in the fragment upon process death recovery
+        when(fragment) {
+            is ChatListFragment -> chatsFragment = fragment
+            is StatusListFragment -> statusListFragment = fragment
+            is StatusUpdateFragment -> statusUpdateFragment = fragment
+        }
+
+        //currentFragment = androidCreatedFragment
+
+        // println("onBlitterFragmentCreated currentFragment=$currentFragment")
+    }
+
     private fun onLogout() {
         firebaseAuth.signOut()
         startActivity(LoginActivity.newIntent(this))
@@ -128,15 +172,20 @@ class MainActivity : AppCompatActivity(), UserNotLoggedInError {
         override fun getItem(position: Int): Fragment {
             //  return PlaceHolderFragment.newIntent(position + 1)
             return when (position) {
-                0 -> statusUpdateFragment
-                1 -> chatsFragment
-                2 -> statusListFragment
+                FragmentId.STATUS_UPDATE.ordinal -> statusUpdateFragment
+                FragmentId.CHATS.ordinal -> chatsFragment
+                FragmentId.STATUS_LIST.ordinal -> statusListFragment
                 else -> statusListFragment
             }
         }
 
         override fun getCount(): Int {
             return 3
+        }
+
+        // Utility to Select the tab at "position" in tabLayout
+        fun selectTabLayoutItem(position: Int) {
+            bind.tabs.selectTab(bind.tabs.getTabAt(position), true)
         }
     }
 

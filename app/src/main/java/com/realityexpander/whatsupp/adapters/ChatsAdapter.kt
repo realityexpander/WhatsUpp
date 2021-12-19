@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.realityexpander.whatsupp.R
-import com.realityexpander.whatsupp.listener.ChatsClickListener
-import com.realityexpander.whatsupp.util.*
+import com.realityexpander.whatsupp.listeners.ChatsClickListener
+import com.realityexpander.whatsupp.utils.*
 
 
 class ChatsAdapter(val chats: ArrayList<String>):

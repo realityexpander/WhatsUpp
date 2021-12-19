@@ -13,19 +13,18 @@ import com.realityexpander.whatsupp.activities.ConversationActivity
 import com.realityexpander.whatsupp.activities.MainActivity
 import com.realityexpander.whatsupp.adapters.ChatsAdapter
 import com.realityexpander.whatsupp.databinding.FragmentChatsBinding
-import com.realityexpander.whatsupp.listener.ChatsClickListener
-import com.realityexpander.whatsupp.listener.UserNotLoggedInError
-import com.realityexpander.whatsupp.util.Chat
-import com.realityexpander.whatsupp.util.DATA_CHATS_COLLECTION
-import com.realityexpander.whatsupp.util.DATA_USERS_COLLECTION
-import com.realityexpander.whatsupp.util.DATA_USER_CHATS
+import com.realityexpander.whatsupp.listeners.ChatsClickListener
+import com.realityexpander.whatsupp.utils.Chat
+import com.realityexpander.whatsupp.utils.DATA_CHATS_COLLECTION
+import com.realityexpander.whatsupp.utils.DATA_USERS_COLLECTION
+import com.realityexpander.whatsupp.utils.DATA_USER_CHATS
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ChatsFragment.newInstance] factory method to
+ * Use the [ChatListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ChatsFragment : Fragment(), ChatsClickListener {
+class ChatListFragment : BaseFragment(), ChatsClickListener {
     private var _bind: FragmentChatsBinding? = null
     private val bind: FragmentChatsBinding
         get() = _bind!!
@@ -54,6 +53,15 @@ class ChatsFragment : Fragment(), ChatsClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        savedInstanceState?.apply {
+            // After process death, pass this System-created fragment to HostContext
+            hostContextI?.onAndroidFragmentCreated(this@ChatListFragment)
+
+            // not needed yet
+            // onViewStateRestored(savedInstanceState)
+        }
+
         chatsAdapter.setOnItemClickListener(this)
         bind.chatsRv.apply {
             setHasFixedSize(false)

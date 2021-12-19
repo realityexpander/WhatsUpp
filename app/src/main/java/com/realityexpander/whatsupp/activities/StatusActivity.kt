@@ -6,9 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.realityexpander.whatsupp.databinding.ActivityStatusBinding
-import com.realityexpander.whatsupp.util.StatusListItem
-import com.realityexpander.whatsupp.util.loadUrl
-import com.realityexpander.whatsupp.util.simpleErrorMessageDialog
+import com.realityexpander.whatsupp.utils.StatusListItem
+import com.realityexpander.whatsupp.utils.loadUrl
+import com.realityexpander.whatsupp.utils.simpleErrorMessageDialog
 import kotlinx.coroutines.*
 
 const val PARAM_STATUS_ITEM = "status item"

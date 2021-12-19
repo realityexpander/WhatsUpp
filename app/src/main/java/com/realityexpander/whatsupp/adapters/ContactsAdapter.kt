@@ -7,8 +7,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.realityexpander.whatsupp.R
-import com.realityexpander.whatsupp.listener.ContactsClickListener
-import com.realityexpander.whatsupp.util.Contact
+import com.realityexpander.whatsupp.listeners.ContactsClickListener
+import com.realityexpander.whatsupp.utils.Contact
 
 class ContactsAdapter(val contacts: ArrayList<Contact>):
     RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder>() {

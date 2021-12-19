@@ -14,4 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="MenuStyle" parent="ThemeOverlay.MaterialComponents.Dark">
+    </style>
+
 </resources>

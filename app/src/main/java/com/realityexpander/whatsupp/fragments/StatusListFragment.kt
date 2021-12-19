@@ -15,18 +15,19 @@ import com.realityexpander.whatsupp.activities.MainActivity
 import com.realityexpander.whatsupp.activities.StatusActivity
 import com.realityexpander.whatsupp.adapters.StatusListAdapter
 import com.realityexpander.whatsupp.databinding.FragmentStatusListBinding
-import com.realityexpander.whatsupp.listener.StatusItemClickListener
-import com.realityexpander.whatsupp.util.DATA_USERS_COLLECTION
-import com.realityexpander.whatsupp.util.DATA_USER_CHATS
-import com.realityexpander.whatsupp.util.StatusListItem
-import com.realityexpander.whatsupp.util.User
+import com.realityexpander.whatsupp.interfaces.UpdateUIExternally
+import com.realityexpander.whatsupp.listeners.StatusItemClickListener
+import com.realityexpander.whatsupp.utils.DATA_USERS_COLLECTION
+import com.realityexpander.whatsupp.utils.DATA_USER_CHATS
+import com.realityexpander.whatsupp.utils.StatusListItem
+import com.realityexpander.whatsupp.utils.User
 
 /**
  * A simple [Fragment] subclass.
  * Use the [StatusListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class StatusListFragment : Fragment(), StatusItemClickListener {
+class StatusListFragment: BaseFragment(), StatusItemClickListener, UpdateUIExternally {
 
     private var _bind: FragmentStatusListBinding? = null
     private val bind: FragmentStatusListBinding
@@ -58,6 +59,14 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        savedInstanceState?.apply {
+            // After process death, pass this System-created fragment to HostContext
+            hostContextI?.onAndroidFragmentCreated(this@StatusListFragment)
+
+            // not needed yet
+            // onViewStateRestored(savedInstanceState)
+        }
+
         statusListAdapter.setOnItemClickListener(this)
         bind.statusListRV.apply {
             setHasFixedSize(false)
@@ -77,7 +86,7 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
         removeAllPartnerStatusListeners()
     }
 
-    fun onVisible() {
+    override fun onUpdateUI() {
         statusListAdapter.onClearList() // Clear out the old statuses
         refreshPartnersStatusList(true)
     }

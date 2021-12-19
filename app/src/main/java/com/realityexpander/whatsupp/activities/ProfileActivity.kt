@@ -23,9 +23,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.realityexpander.whatsupp.R
 import com.realityexpander.whatsupp.databinding.ActivityProfileBinding
 import com.realityexpander.whatsupp.utils.*
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import java.lang.Exception
 
 
@@ -209,6 +206,7 @@ class ProfileActivity : AppCompatActivity() {
 
         if (proceed) {
 
+            // Save the picked image to Firestore, if there is one.
             pickedImageUri?.let {
                 storeProfileImage(pickedImageUri)
                 pickedImageUri = null
@@ -226,8 +224,9 @@ class ProfileActivity : AppCompatActivity() {
             updateMap[DATA_USER_USERNAME] = username
             updateMap[DATA_USER_PHONE] = phone
             updateMap[DATA_USER_PROFILE_IMAGE_URL] = savedProfileImageUrl
+            updateMap[DATA_USER_PHONE_TRIMMED] = phone.trimUnnecessaryPhoneCharacters()
 
-            // Save to database
+            // Save updated user to database
             bind.progressLayout.visibility = View.VISIBLE
             firebaseDB.collection(DATA_USERS_COLLECTION)
                 .document(firebaseAuth.uid!!)
@@ -419,6 +418,8 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 }
+
+
 
 
 

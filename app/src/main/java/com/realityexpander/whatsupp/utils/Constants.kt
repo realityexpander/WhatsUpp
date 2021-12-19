@@ -27,6 +27,7 @@ const val DATA_USERS_COLLECTION = "users" // userId & partnerUserId
 const val DATA_USER_EMAIL = "email"
 const val DATA_USER_USERNAME = "username"
 const val DATA_USER_PHONE = "phone"
+const val DATA_USER_PHONE_TRIMMED = "phoneTrimmed"
 const val DATA_USER_UID = "uid"
 const val DATA_USER_PROFILE_IMAGE_URL = "profileImageUrl"
 const val DATA_USER_STATUS_URL = "statusImageUrl"

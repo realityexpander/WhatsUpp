@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.view.MenuItem
 import android.view.View
+import android.widget.SearchView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.realityexpander.whatsupp.adapters.ContactsAdapter
@@ -16,6 +18,7 @@ import com.realityexpander.whatsupp.listeners.ContactsClickListener
 import com.realityexpander.whatsupp.utils.CONTACTS_PARAM_NAME
 import com.realityexpander.whatsupp.utils.CONTACTS_PARAM_PHONE
 import com.realityexpander.whatsupp.utils.Contact
+import com.realityexpander.whatsupp.utils.getApplicationName
 
 class ContactsActivity : AppCompatActivity(), ContactsClickListener {
 
@@ -31,6 +34,10 @@ class ContactsActivity : AppCompatActivity(), ContactsClickListener {
         super.onCreate(savedInstanceState)
         bind = ActivityContactsBinding.inflate(layoutInflater)
         setContentView(bind.root)
+
+        title = "Pick a contact to start a chat"
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         getContacts()
     }
@@ -69,12 +76,13 @@ class ContactsActivity : AppCompatActivity(), ContactsClickListener {
                     ?.replace("(", "")
                     ?.replace(")", "")
                     ?.replace(" ", "")
+                    ?.replace("-", "")
             }
         )
 
-        setupContactList()
+        setupContactListRV()
     }
-    private fun setupContactList() {
+    private fun setupContactListRV() {
         bind.progressLayout.visibility = View.VISIBLE
 
         val contactsAdapter = ContactsAdapter(contactsList)
@@ -86,6 +94,23 @@ class ContactsActivity : AppCompatActivity(), ContactsClickListener {
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
 
+        // Setup search query
+        bind.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // if (contactsList.contains(query)) {
+                    contactsAdapter.getFilter().filter(query)
+                // } else {
+                //     Toast.makeText(this@ContactsActivity, "No Match found", Toast.LENGTH_LONG).show()
+                // }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                contactsAdapter.getFilter().filter(newText)
+                return false
+            }
+        })
+
         bind.progressLayout.visibility = View.INVISIBLE
     }
 
@@ -95,5 +120,10 @@ class ContactsActivity : AppCompatActivity(), ContactsClickListener {
         intent.putExtra(CONTACTS_PARAM_PHONE, phone)
         setResult(Activity.RESULT_OK, intent)
         finish()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return true
     }
 }

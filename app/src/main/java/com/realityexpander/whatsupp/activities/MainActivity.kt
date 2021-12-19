@@ -268,8 +268,12 @@ class MainActivity : AppCompatActivity(),
     private fun checkForNewChatUserAndStartNewChat(name: String?, phone: String?) {
         if (!name.isNullOrEmpty() && !phone.isNullOrEmpty()) {
 
+            // Get rid of unnecessary characters in phone number to improve matches
+            val trimmedPhone = phone.trimUnnecessaryPhoneCharacters()
+
+            // Look for user with matching phone number
             firebaseDB.collection(DATA_USERS_COLLECTION)
-                .whereEqualTo(DATA_USER_PHONE, phone) // Unique key is the phone number for the user
+                .whereEqualTo(DATA_USER_PHONE_TRIMMED, trimmedPhone) // Unique key is the phone number for the user
                 .get()
                 .addOnSuccessListener { result ->
                     if (result.documents.size > 0) {

@@ -114,10 +114,16 @@ class SignupActivity : AppCompatActivity() {
 
         if (proceed) {
             bind.progressLayout.visibility = View.VISIBLE
-            firebaseAuth.createUserWithEmailAndPassword(bind.emailEt.text.toString(),
-                bind.passwordEt.text.toString())
+
+            // Create the new user with email and password
+            firebaseAuth.createUserWithEmailAndPassword(
+                bind.emailEt.text.toString(),
+                bind.passwordEt.text.toString()
+            )
                 .addOnCompleteListener { task ->
                     bind.progressLayout.visibility = View.INVISIBLE
+
+                    // Attempt to save the new user to the DB
                     if (!task.isSuccessful) {
                         Toast.makeText(this@SignupActivity,
                             "Signup unsuccessful ${task.exception?.localizedMessage}",
@@ -130,17 +136,17 @@ class SignupActivity : AppCompatActivity() {
                             email = email,
                             username = name,
                             phone = phone,
+                            trimmedPhone = phone.trimUnnecessaryPhoneCharacters(),
                             uid = firebaseAuth.uid,
                             "",
                             statusMessage = "Hello, I'm new.",
                             statusTimestamp = System.currentTimeMillis().toString())
 
-                        // Save to database
+                        // Save user to database
                         firebaseDB.collection(DATA_USERS_COLLECTION)
                             .document(firebaseAuth.uid!!)
                             .set(user)
                     }
-
                 }
                 .addOnFailureListener { e ->
                     bind.progressLayout.visibility = View.INVISIBLE

@@ -86,6 +86,11 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
         refreshChatsList(true)
     }
 
+    override fun onPause() {
+        super.onPause()
+        removeAllPartnerStatusListeners()
+    }
+
     override fun onUpdateUI() {
         refreshChatsList(false)
     }
@@ -139,25 +144,53 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
     }
 
     fun newChat(partnerId: String) {
+        var isChatAlreadyStarted = false
+        var user_SavedChatsMap = HashMap<PartnerId, ChatId>()
+
         firebaseDB.collection(DATA_USERS_COLLECTION)
             .document(userId!!)
             .get()
-            .addOnSuccessListener { userDocument ->
+            .addOnSuccessListener first@ { userDocument ->
                 val user_ChatsMap = hashMapOf<PartnerId, ChatId>()
 
                 // Create the chat for the current userId (if it doesn't already exist)
                 userDocument[DATA_USER_CHATS]?.let { user_DocumentChatMap ->
                     if (user_DocumentChatMap is HashMap<*, *>) {
                         @Suppress("UNCHECKED_CAST")
-                        val user_SavedChatsMap = user_DocumentChatMap as HashMap<PartnerId, ChatId>
+                        user_SavedChatsMap = user_DocumentChatMap as HashMap<PartnerId, ChatId>
 
                         // Does a chat already exist for this partnerId?
                         if (user_SavedChatsMap.containsKey(partnerId)) {
-                            return@addOnSuccessListener // no need to add a new Chat map.
+                            isChatAlreadyStarted = true
                         } else {
                             user_ChatsMap.putAll(user_SavedChatsMap)
                         }
                     }
+                }
+
+                // If Chat exists, start the ChatActivity after looking up the partnerId
+                if (isChatAlreadyStarted) {
+                    firebaseDB.collection(DATA_USERS_COLLECTION)
+                        .document(partnerId)
+                        .get()
+                        .addOnSuccessListener { partnerDocument ->
+                            val partner = partnerDocument.toObject(User::class.java)
+
+                            // start the chat now
+                            onChatItemClicked(
+                                user_SavedChatsMap[partnerId],
+                                partnerId,
+                                partner?.profileImageUrl,
+                                partner?.username
+                            )
+                            return@addOnSuccessListener
+                        }
+                        .addOnFailureListener { e ->
+                            simpleErrorMessageDialog(this.requireContext(), "PartnerId not found.")
+                            e.printStackTrace()
+                        }
+
+                    return@first
                 }
 
                 // Create the chat for the partnerId (it should not exist, we checked above!)

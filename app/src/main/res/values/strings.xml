@@ -34,4 +34,9 @@
     <string name="action_log_out">Log out</string>
     <string name="action_profile">Profile</string>
 
+    <!--Contacts-->
+    <string name="toolbar_title">Contacts</string>
+    <string name="action_search">Search</string>
+    <string name="search_hint">Search name or phone…</string>
+
 </resources>

@@ -87,3 +87,11 @@ fun getApplicationName(context: Context): String? {
     return if (stringId == 0) applicationInfo.nonLocalizedLabel.toString()
         else context.getString(stringId)
 }
+
+fun String.trimUnnecessaryPhoneCharacters(): String {
+    return this.replace("(", "")
+        .replace(")", "")
+        .replace(" ", "")
+        .replace("-", "")
+        .replace("+", "")
+}

@@ -112,6 +112,7 @@ class LoginActivity : AppCompatActivity() {
                 .addOnFailureListener { e ->
                     bind.progressLayout.visibility = View.INVISIBLE
                     e.printStackTrace()
+                    simpleErrorMessageDialog(this, "Login not successful. Please try again.")
                 }
         }
     }

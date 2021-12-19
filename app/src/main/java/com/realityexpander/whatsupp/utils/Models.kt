@@ -11,6 +11,7 @@ data class User (
     val email: String? = "",
     val username: String? = "",
     val phone: String? = "",
+    val trimmedPhone: String? = "",  // number with trimmed extra characters to improve searches
     val uid: String? = "",
     val profileImageUrl: String? = "",
     val statusImageUrl: String? = "",
@@ -53,8 +54,7 @@ data class StatusListItem(
         statusMessage = parcel.readString(),
         statusTimestamp = parcel.readString(),
         statusDate = parcel.readString()
-    ) {
-    }
+    ) { }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(username)

@@ -38,8 +38,7 @@ class ConversationActivity : AppCompatActivity() {
 
         if (intent != null) {
             chatId = intent.extras?.getString(CONVERSATIONS_PARAM_CHAT_ID)
-            partnerProfileImageUrl =
-                intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_PROFILE_IMAGE_URL)
+            partnerProfileImageUrl = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_PROFILE_IMAGE_URL)
             partnerUsername = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_USERNAME)
             partnerId = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_USER_ID)
         } else if (savedInstanceState != null) {

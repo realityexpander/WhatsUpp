@@ -4,14 +4,25 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".activities.ContactsActivity">
 
+        <SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:queryHint="@string/search_hint"
+                android:iconifiedByDefault="false"
+                app:layout_constraintTop_toTopOf="@id/constraintV"
+                android:layout_alignParentTop="true"/>
+
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/contactsRv"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/searchView"
                 android:scrollbars="vertical" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -35,7 +46,6 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="parent">
-
 
             <ProgressBar
                     android:layout_width="wrap_content"

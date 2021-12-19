@@ -84,9 +84,47 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
 
 
     // Refresh Partner status list and maybe update the list of partners
-    private fun refreshPartnersStatusList(collectPartnerUserIds: Boolean) {
+    private fun refreshPartnersStatusList(shouldCollectPartnerUserIds: Boolean) {
 
         bind.progressBar.visibility = View.VISIBLE
+
+        fun addPartnerToStatusList(partnerId: String) {
+            firebaseDB.collection(DATA_USERS_COLLECTION)
+                .document(partnerId)
+                .get()
+                .addOnSuccessListener { partnerUserDoc ->
+                    val partner = partnerUserDoc.toObject(User::class.java)
+
+                    partner?.let {
+                        // Show a status only if there is a status message or image
+                        if (!partner.statusMessage.isNullOrEmpty() || !partner.statusImageUrl.isNullOrEmpty()) {
+                            val item = StatusListItem(
+                                username = partner.username,
+                                profileImageUrl = partner.profileImageUrl,
+                                statusUrl = partner.statusImageUrl,
+                                statusMessage = partner.statusMessage,
+                                statusTimestamp = partner.statusTimestamp,
+                                statusDate = partner.statusDate
+                            )
+                            statusListAdapter.addItem(item)
+                        }
+
+                        // setup Listeners for changes to partners status changes
+                        if (shouldCollectPartnerUserIds) {
+                            val partnerStatusListener =
+                                firebaseDB.collection(DATA_USERS_COLLECTION)
+                                    .document(partnerId)
+                                    .addSnapshotListener { partnerDoc, firebaseFirestoreException ->
+                                        if (firebaseFirestoreException == null && partnerDoc?.metadata?.isFromCache == false) {
+                                            statusListAdapter.onClearList() // Clear out the old statuses
+                                            refreshPartnersStatusList(false)
+                                        }
+                                    }
+                            partnerStatusListenerSet.add(partnerStatusListener)
+                        }
+                    }
+                }
+        }
 
         firebaseDB.collection(DATA_USERS_COLLECTION)
             .document(userId!!)
@@ -96,46 +134,12 @@ class StatusListFragment : Fragment(), StatusItemClickListener {
                 // If there are any partner chats for this userId...
                 if (userDoc.contains(DATA_USER_CHATS)) {
                     val partners = userDoc[DATA_USER_CHATS]
-                    if(collectPartnerUserIds) removeAllPartnerStatusListeners()
+                    if(shouldCollectPartnerUserIds) removeAllPartnerStatusListeners()
 
                     @Suppress("UNCHECKED_CAST")
                     for (partnerId in (partners as HashMap<String, String>).keys) {
 
-                        firebaseDB.collection(DATA_USERS_COLLECTION)
-                            .document(partnerId)
-                            .get()
-                            .addOnSuccessListener { partnerUserDoc ->
-                                val partner = partnerUserDoc.toObject(User::class.java)
-
-                                partner?.let {
-                                    // Show a status only if there is a status message or image
-                                    if (!partner.statusMessage.isNullOrEmpty() || !partner.statusImageUrl.isNullOrEmpty()) {
-                                        val item = StatusListItem(
-                                            username = partner.username,
-                                            profileImageUrl = partner.profileImageUrl,
-                                            statusUrl = partner.statusImageUrl,
-                                            statusMessage = partner.statusMessage,
-                                            statusTimestamp = partner.statusTimestamp,
-                                            statusDate = partner.statusDate
-                                        )
-                                        statusListAdapter.addItem(item)
-                                    }
-
-                                    // setup Listeners for changes to partners status changes
-                                    if(collectPartnerUserIds) {
-                                        val partnerStatusListener =
-                                            firebaseDB.collection(DATA_USERS_COLLECTION)
-                                                .document(partnerId)
-                                                .addSnapshotListener { partnerDoc, firebaseFirestoreException ->
-                                                    if (firebaseFirestoreException == null && partnerDoc?.metadata?.isFromCache == false) {
-                                                        statusListAdapter.onClearList() // Clear out the old statuses
-                                                        refreshPartnersStatusList(false)
-                                                    }
-                                                }
-                                        partnerStatusListenerSet.add(partnerStatusListener)
-                                    }
-                                }
-                            }
+                        addPartnerToStatusList(partnerId)
                     }
                 }
                 bind.progressBar.visibility = View.GONE

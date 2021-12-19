@@ -201,7 +201,6 @@ class StatusUpdateFragment: BaseFragment(), UpdateUIExternally {
                 imagePickerResultCallback(uri)
             }
         }
-
     private fun startImagePickerActivity(imagePickerResultCallback: (uri: Uri) -> Unit) {
         this.imagePickerResultCallback = imagePickerResultCallback
         imagePickerForResultLauncher.launch(arrayOf("image/*")) // Launch Image Picker

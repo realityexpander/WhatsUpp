@@ -35,7 +35,7 @@
                         android:layout_margin="@dimen/grid_3x">
 
                     <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/nameET"
+                            android:id="@+id/nameEt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/hint_user_name"
@@ -51,7 +51,7 @@
                         android:layout_margin="@dimen/grid_3x">
 
                     <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/phoneET"
+                            android:id="@+id/phoneEt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/hint_phone_number"

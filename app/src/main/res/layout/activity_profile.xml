@@ -18,7 +18,7 @@
                     android:layout_height="wrap_content">
 
                 <ImageView
-                        android:id="@+id/profile_image_iv"
+                        android:id="@+id/profileImageIv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -31,14 +31,14 @@
                         android:maxHeight="200dp"
                         android:scaleType="centerInside"
                         android:clickable="true"
-                        android:onClick="onProfileImageAdd"
+                        android:onClick="startProfileImagePickerActivity"
                         android:src="@drawable/default_user" />
 
                 <TextView
-                        android:id="@+id/emailAddress"
+                        android:id="@+id/emailAddressTv"
                         android:layout_width="@dimen/standard_width"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/profile_image_iv"
+                        android:layout_below="@id/profileImageIv"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/grid_2x"
                         android:layout_marginBottom="@dimen/grid_2x"
@@ -48,12 +48,12 @@
                         android:id="@+id/nameTIL"
                         android:layout_width="@dimen/standard_width"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/emailAddress"
+                        android:layout_below="@id/emailAddressTv"
                         android:layout_centerHorizontal="true"
                         android:layout_margin="@dimen/grid_3x">
 
                     <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/nameET"
+                            android:id="@+id/nameEt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/hint_user_name"
@@ -69,7 +69,7 @@
                         android:layout_margin="@dimen/grid_3x">
 
                     <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/phoneET"
+                            android:id="@+id/phoneEt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/hint_phone_number"

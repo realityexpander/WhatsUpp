@@ -11,8 +11,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -21,6 +23,9 @@ import com.google.firebase.storage.FirebaseStorage
 import com.realityexpander.whatsupp.R
 import com.realityexpander.whatsupp.databinding.ActivityProfileBinding
 import com.realityexpander.whatsupp.utils.*
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.lang.Exception
 
 
@@ -39,6 +44,7 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var photoPickerForResultLauncher: ActivityResultLauncher<Array<out String>>
     private var savedProfileImageUrl = ""
     private var pickedImageUri: Uri? = null
 
@@ -64,15 +70,27 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         //setup text-etry reset error messages listeners
-        setOnTextChangedListener(bind.nameET, bind.nameTIL)
-        setOnTextChangedListener(bind.phoneET, bind.phoneTIL)
+        setOnTextChangedListener(bind.nameEt, bind.nameTIL)
+        setOnTextChangedListener(bind.phoneEt, bind.phoneTIL)
+
+        // Setup photo picker (new way)
+        photoPickerForResultLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+                if (uri != null) {
+                    pickedImageUri = uri
+                    bind.profileImageIv.loadUrl(uri.toString(), R.drawable.default_user)
+                }
+            }
 
         // photo picker for profileImage
         bind.profileImageIv.setOnClickListener {
-            resultPhotoLauncher.launch(arrayOf("image/*")) // OpenDocument
+            photoPickerForResultLauncher.launch(arrayOf("image/*")) // OpenDocument
         }
 
-        populateInfo()
+        if (savedInstanceState == null) {
+            populateInfo()
+        } else {
+            onRestoreInstanceState(savedInstanceState)
+        }
     }
 
     override fun onResume() {
@@ -84,6 +102,41 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        println("onSaveInstanceState for ProfileActivity")
+
+        outState.apply {
+            putString(PROFILE_ACTIVITY_EMAIL, bind.emailAddressTv.text.toString())
+            putString(PROFILE_ACTIVITY_USERNAME, bind.nameEt.text.toString())
+            putString(PROFILE_ACTIVITY_PHONE_NUMBER, bind.phoneEt.text.toString())
+            pickedImageUri?.let {
+                putString(PROFILE_ACTIVITY_PICKED_IMAGE_URI, pickedImageUri.toString())
+            }
+            putString(PROFILE_ACTIVITY_SAVED_PROFILE_IMAGE_URL, savedProfileImageUrl)
+        }
+    }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        println("onRestoreInstanceState for ProfileActivity")
+
+        savedInstanceState.apply {
+            bind.nameEt.setText(getString(PROFILE_ACTIVITY_USERNAME, ""))
+            bind.phoneEt.setText(getString(PROFILE_ACTIVITY_PHONE_NUMBER, ""))
+            bind.emailAddressTv.text = getString(PROFILE_ACTIVITY_EMAIL, "")
+            pickedImageUri = getString(PROFILE_ACTIVITY_PICKED_IMAGE_URI)?.let { uriString ->
+                uriString.toUri()
+            }
+            savedProfileImageUrl = getString(PROFILE_ACTIVITY_SAVED_PROFILE_IMAGE_URL, "")
+
+            if (pickedImageUri != null) {
+                bind.profileImageIv.loadUrl(pickedImageUri.toString())
+            } else {
+                bind.profileImageIv.loadUrl(savedProfileImageUrl)
+            }
+        }
+    }
+
     private fun populateInfo() {
         bind.progressLayout.visibility = View.VISIBLE
 
@@ -91,9 +144,9 @@ class ProfileActivity : AppCompatActivity() {
             .addOnSuccessListener { documentSnapshot ->
                 currentUser = documentSnapshot.toObject(User::class.java)
 
-                bind.emailAddress.setText(currentUser?.email)
-                bind.nameET.setText(currentUser?.username)
-                bind.phoneET.setText(currentUser?.phone)
+                bind.emailAddressTv.setText(currentUser?.email)
+                bind.nameEt.setText(currentUser?.username)
+                bind.phoneEt.setText(currentUser?.phone)
                 currentUser?.profileImageUrl?.let { profileImageUrl ->
                     bind.profileImageIv.loadUrl(
                         profileImageUrl,
@@ -143,12 +196,12 @@ class ProfileActivity : AppCompatActivity() {
         var proceed = true
 
         // Check for form errors
-        if (bind.nameET.text.isNullOrEmpty()) {
+        if (bind.nameEt.text.isNullOrEmpty()) {
             bind.nameTIL.error = "Name is required"
             bind.nameTIL.isErrorEnabled = true
             proceed = false
         }
-        if (bind.phoneET.text.isNullOrEmpty()) {
+        if (bind.phoneEt.text.isNullOrEmpty()) {
             bind.phoneTIL.error = "Phone is required"
             bind.phoneTIL.isErrorEnabled = true
             proceed = false
@@ -161,8 +214,8 @@ class ProfileActivity : AppCompatActivity() {
                 pickedImageUri = null
             }
 
-            val username = bind.nameET.text.toString()
-            val phone = bind.phoneET.text.toString()
+            val username = bind.nameEt.text.toString()
+            val phone = bind.phoneEt.text.toString()
             val saveUser = currentUser?.copy(
                 phone = phone,
                 username = username,
@@ -286,7 +339,7 @@ class ProfileActivity : AppCompatActivity() {
             }
     }
 
-    // To remove the error warning when user types into the fields
+    // To remove the error warning when user types into the edit text fields
     private fun setOnTextChangedListener(et: EditText, til: TextInputLayout) {
         et.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -297,18 +350,9 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
-    // Setup photo picker (new way)
-    private val resultPhotoLauncher =
-        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-            if (uri != null) {
-                bind.profileImageIv.loadUrl(uri.toString(), R.drawable.default_user)
-
-                pickedImageUri = uri
-            }
-        }
     @Suppress("UNUSED_PARAMETER")
-    fun onProfileImageAdd(view: View) {
-        resultPhotoLauncher.launch(arrayOf("image/*")) // OpenDocument
+    fun startProfileImagePickerActivity(view: View) {
+        photoPickerForResultLauncher.launch(arrayOf("image/*")) // OpenDocument
     }
 
     // Save the profile image to the firebase Storage

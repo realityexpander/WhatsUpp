@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(),
     // Fragment Identifiers
     private enum class FragmentId {
         STATUS_UPDATE,
-        CHATS,
+        CHAT_LIST,
         STATUS_LIST,
     }
 
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(),
                         bind.fab.hide()
                         statusUpdateFragment.onUpdateUI()
                     }
-                    FragmentId.CHATS.ordinal -> {
+                    FragmentId.CHAT_LIST.ordinal -> {
                         bind.fab.show()
                     }
                     FragmentId.STATUS_LIST.ordinal -> {
@@ -173,7 +173,7 @@ class MainActivity : AppCompatActivity(),
             //  return PlaceHolderFragment.newIntent(position + 1)
             return when (position) {
                 FragmentId.STATUS_UPDATE.ordinal -> statusUpdateFragment
-                FragmentId.CHATS.ordinal -> chatsFragment
+                FragmentId.CHAT_LIST.ordinal -> chatsFragment
                 FragmentId.STATUS_LIST.ordinal -> statusListFragment
                 else -> statusListFragment
             }

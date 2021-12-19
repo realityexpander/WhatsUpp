@@ -46,6 +46,10 @@ const val DATA_CHAT_MESSAGE_TIMESTAMP = "timestamp"
 
 
 ///////// SavedInstanceState /////////
-const val MAIN_ACTIVITY_SELECTED_TAB_POSITION = "homeActivity_selectedTabPosition"
-const val SEARCH_FRAGMENT_SHOW_SEARCH_RESULTS = "searchFragment_isSearchResultsDisplayed"
-const val SEARCH_FRAGMENT_CURRENT_HASHTAG_QUERY = "searchFragment_currentHashtagQuery"
+const val MAIN_ACTIVITY_SELECTED_TAB_POSITION = "mainActivity_selectedTabPosition"
+
+const val PROFILE_ACTIVITY_USERNAME = "profileActivity_username"
+const val PROFILE_ACTIVITY_PHONE_NUMBER = "profileActivity_phoneNumber"
+const val PROFILE_ACTIVITY_EMAIL = "profileActivity_email"
+const val PROFILE_ACTIVITY_PICKED_IMAGE_URI = "profileActivity_pickedImageUri"
+const val PROFILE_ACTIVITY_SAVED_PROFILE_IMAGE_URL = "profileActivity_savedProfileImageUrl"

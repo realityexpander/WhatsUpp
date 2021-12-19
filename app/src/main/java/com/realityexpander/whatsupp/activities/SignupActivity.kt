@@ -37,8 +37,8 @@ class SignupActivity : AppCompatActivity() {
         setContentView(bind.root)
 
         //setup text-etry reset error messages listeners
-        setOnTextChangedListener(bind.nameET, bind.nameTIL)
-        setOnTextChangedListener(bind.phoneET, bind.phoneTIL)
+        setOnTextChangedListener(bind.nameEt, bind.nameTIL)
+        setOnTextChangedListener(bind.phoneEt, bind.phoneTIL)
         setOnTextChangedListener(bind.emailET, bind.emailTIL)
         setOnTextChangedListener(bind.passwordET, bind.passwordTIL)
 
@@ -67,12 +67,12 @@ class SignupActivity : AppCompatActivity() {
         var proceed = true
 
         // Check for form errors
-        if (bind.nameET.text.isNullOrEmpty()) {
+        if (bind.nameEt.text.isNullOrEmpty()) {
             bind.nameTIL.error = "Name is required"
             bind.nameTIL.isErrorEnabled = true
             proceed = false
         }
-        if (bind.phoneET.text.isNullOrEmpty()) {
+        if (bind.phoneEt.text.isNullOrEmpty()) {
             bind.phoneTIL.error = "Phone is required"
             bind.phoneTIL.isErrorEnabled = true
             proceed = false
@@ -100,8 +100,8 @@ class SignupActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT).show()
                     } else if (firebaseAuth.uid != null) {
                         val email = bind.emailET.text.toString()
-                        val phone = bind.phoneET.text.toString()
-                        val name = bind.nameET.text.toString()
+                        val phone = bind.phoneEt.text.toString()
+                        val name = bind.nameEt.text.toString()
                         val user = User(
                             email = email,
                             username = name,

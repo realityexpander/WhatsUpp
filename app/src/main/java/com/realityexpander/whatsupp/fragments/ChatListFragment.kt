@@ -177,8 +177,7 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
                         }
 
                         // Prepare to save the new chat then update the user and partner
-                        val chatParticipants = arrayListOf(userId, partnerId)
-                        val chat = Chat(chatParticipants)
+                        val chatParticipants = Chat(arrayListOf(userId, partnerId))
                         val newChatDocRef = firebaseDB.collection(DATA_CHATS_COLLECTION).document() // new document
                         val userDocRef = firebaseDB.collection(DATA_USERS_COLLECTION).document(userId)
                         val partnerDocRef = firebaseDB.collection(DATA_USERS_COLLECTION).document(partnerId)
@@ -189,7 +188,7 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
 
                         // Update the database for user & partner chat map at same time
                         val batch = firebaseDB.batch()
-                        batch.set(newChatDocRef, chat)
+                        batch.set(newChatDocRef, chatParticipants)
                         batch.update(userDocRef, DATA_USER_CHATS, user_ChatsMap)
                         batch.update(partnerDocRef, DATA_USER_CHATS, partner_ChatsMap)
                         batch.commit()

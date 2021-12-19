@@ -53,3 +53,14 @@ const val PROFILE_ACTIVITY_PHONE_NUMBER = "profileActivity_phoneNumber"
 const val PROFILE_ACTIVITY_EMAIL = "profileActivity_email"
 const val PROFILE_ACTIVITY_PICKED_IMAGE_URI = "profileActivity_pickedImageUri"
 const val PROFILE_ACTIVITY_SAVED_PROFILE_IMAGE_URL = "profileActivity_savedProfileImageUrl"
+
+const val SIGNUP_ACTIVITY_EMAIL = "signupActivity_emailAddress"
+const val SIGNUP_ACTIVITY_USERNAME = "signupActivity_username"
+const val SIGNUP_ACTIVITY_PHONE_NUMBER = "signupActivity_phone"
+const val SIGNUP_ACTIVITY_PASSWORD = "signupActivity_password"
+
+const val LOGIN_ACTIVITY_EMAIL = "loginActivity_emailAddress"
+
+const val STATUS_ACTIVITY_STATUS_MESSAGE = "statusActivity_statusMessage"
+const val STATUS_ACTIVITY_STATUS_DATE = "statusActivity_statusDate"
+const val STATUS_ACTIVITY_STATUS_IMAGE_URL = "statusActivity_statusImageUrl"

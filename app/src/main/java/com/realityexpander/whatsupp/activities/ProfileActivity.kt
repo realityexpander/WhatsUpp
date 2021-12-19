@@ -104,7 +104,7 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        println("onSaveInstanceState for ProfileActivity")
+        // println("onSaveInstanceState for ProfileActivity")
 
         outState.apply {
             putString(PROFILE_ACTIVITY_EMAIL, bind.emailAddressTv.text.toString())
@@ -118,7 +118,7 @@ class ProfileActivity : AppCompatActivity() {
     }
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        println("onRestoreInstanceState for ProfileActivity")
+        // println("onRestoreInstanceState for ProfileActivity")
 
         savedInstanceState.apply {
             bind.nameEt.setText(getString(PROFILE_ACTIVITY_USERNAME, ""))

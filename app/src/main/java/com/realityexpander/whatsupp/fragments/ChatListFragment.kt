@@ -13,6 +13,7 @@ import com.realityexpander.whatsupp.activities.ConversationActivity
 import com.realityexpander.whatsupp.activities.MainActivity
 import com.realityexpander.whatsupp.adapters.ChatsAdapter
 import com.realityexpander.whatsupp.databinding.FragmentChatsBinding
+import com.realityexpander.whatsupp.interfaces.UpdateUIExternally
 import com.realityexpander.whatsupp.listeners.ChatsClickListener
 import com.realityexpander.whatsupp.utils.Chat
 import com.realityexpander.whatsupp.utils.DATA_CHATS_COLLECTION
@@ -24,7 +25,7 @@ import com.realityexpander.whatsupp.utils.DATA_USER_CHATS
  * Use the [ChatListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ChatListFragment : BaseFragment(), ChatsClickListener {
+class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally {
     private var _bind: FragmentChatsBinding? = null
     private val bind: FragmentChatsBinding
         get() = _bind!!
@@ -73,15 +74,23 @@ class ChatListFragment : BaseFragment(), ChatsClickListener {
         // Listen for any changes in the Database (like new messages)
         firebaseDB.collection(DATA_USERS_COLLECTION)
             .document(userId!!)
-            .addSnapshotListener { _, firebaseFirestoreException ->
-                if (firebaseFirestoreException == null) {
-                    refreshChats()
+            .addSnapshotListener { userDoc, firebaseFirestoreException ->
+                if (firebaseFirestoreException == null && userDoc?.metadata?.isFromCache == false) {
+                    onUpdateUI()
                 }
             }
     }
 
+    override fun onResume() {
+        super.onResume()
 
-    private fun refreshChats() {
+        onUpdateUI()
+    }
+
+    override fun onUpdateUI() {
+        bind.progressBar.visibility = View.VISIBLE
+
+        // Refresh chats
         firebaseDB.collection(DATA_USERS_COLLECTION)
             .document(userId!!)
             .get()
@@ -98,7 +107,11 @@ class ChatListFragment : BaseFragment(), ChatsClickListener {
                         }
                     }
                     chatsAdapter.updateChats(chats)
+                    bind.progressBar.visibility = View.INVISIBLE
                 }
+            }
+            .addOnFailureListener {
+                bind.progressBar.visibility = View.INVISIBLE
             }
     }
 

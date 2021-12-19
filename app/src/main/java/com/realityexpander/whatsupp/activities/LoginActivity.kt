@@ -14,6 +14,7 @@ import android.widget.Toast
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.realityexpander.whatsupp.databinding.ActivityLoginBinding
+import com.realityexpander.whatsupp.utils.*
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var bind: ActivityLoginBinding
@@ -37,8 +38,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(bind.root)
 
         //setup reset text-error message listeners
-        setOnTextChangedListener(bind.emailET, bind.emailTIL)
-        setOnTextChangedListener(bind.passwordET, bind.passwordTIL)
+        setOnTextChangedListener(bind.emailEt, bind.emailTIL)
+        setOnTextChangedListener(bind.passwordEt, bind.passwordTIL)
 
         // setup "progress indicator" event prevention
         bind.progressLayout.setOnTouchListener { _, _ -> true /* do nothing */ }
@@ -54,6 +55,23 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth.removeAuthStateListener(firebaseAuthListener)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // println("onSaveInstanceState for LoginActivity")
+
+        outState.apply {
+            putString(LOGIN_ACTIVITY_EMAIL, bind.emailEt.text.toString())
+        }
+    }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // println("onRestoreInstanceState for LoginActivity")
+
+        savedInstanceState.apply {
+            bind.emailEt.setText(getString(LOGIN_ACTIVITY_EMAIL, ""))
+        }
+    }
+
     @Suppress("UNUSED_PARAMETER")
     fun onGoToSignup(v: View) {
         startActivity(SignupActivity.newIntent(this))
@@ -64,12 +82,12 @@ class LoginActivity : AppCompatActivity() {
     fun onLogin(v: View) {
         var proceed = true
 
-        if (bind.emailET.text.isNullOrEmpty()) {
+        if (bind.emailEt.text.isNullOrEmpty()) {
             bind.emailTIL.error = "Email is required"
             bind.emailTIL.isErrorEnabled = true
             proceed = false
         }
-        if (bind.passwordET.text.isNullOrEmpty()) {
+        if (bind.passwordEt.text.isNullOrEmpty()) {
             bind.passwordTIL.error = "Password is required"
             bind.emailTIL.isErrorEnabled = true
             proceed = false
@@ -78,8 +96,8 @@ class LoginActivity : AppCompatActivity() {
             bind.progressLayout.visibility = View.VISIBLE
 
             firebaseAuth.signInWithEmailAndPassword(
-                bind.emailET.text.toString(),
-                bind.passwordET.text.toString()
+                bind.emailEt.text.toString(),
+                bind.passwordEt.text.toString()
             )
                 .addOnCompleteListener { task ->
                     bind.progressLayout.visibility = View.INVISIBLE

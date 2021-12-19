@@ -6,9 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.realityexpander.whatsupp.databinding.ActivityStatusBinding
-import com.realityexpander.whatsupp.utils.StatusListItem
-import com.realityexpander.whatsupp.utils.loadUrl
-import com.realityexpander.whatsupp.utils.simpleErrorMessageDialog
+import com.realityexpander.whatsupp.utils.*
 import kotlinx.coroutines.*
 
 const val PARAM_STATUS_ITEM = "status item"
@@ -33,9 +31,11 @@ class StatusActivity : AppCompatActivity() {
             finish()
         }
 
-        bind.statusTv.text = statusItem.statusMessage
-        bind.statusDateTv.text = statusItem.statusDate
-        bind.statusIv.loadUrl(statusItem.statusUrl)
+        if (savedInstanceState == null) {
+            bind.statusTv.text = statusItem.statusMessage
+            bind.statusDateTv.text = statusItem.statusDate
+            bind.statusIv.loadUrl(statusItem.statusUrl)
+        }
 
         bind.progressBar.max = 100
         val errorHandler = CoroutineExceptionHandler { _, throwable->
@@ -59,6 +59,27 @@ class StatusActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         timerScope.cancel()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // println("onSaveInstanceState for ProfileActivity")
+
+        outState.apply {
+            putString(STATUS_ACTIVITY_STATUS_MESSAGE, bind.statusTv.text.toString())
+            putString(STATUS_ACTIVITY_STATUS_DATE, bind.statusDateTv.text.toString())
+            putString(STATUS_ACTIVITY_STATUS_IMAGE_URL, statusItem.statusUrl)
+        }
+    }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // println("onRestoreInstanceState for ProfileActivity")
+
+        savedInstanceState.apply {
+            bind.statusTv.text = getString(STATUS_ACTIVITY_STATUS_MESSAGE, "")
+            bind.statusDateTv.text = getString(STATUS_ACTIVITY_STATUS_DATE, "")
+            bind.statusIv.loadUrl(getString(STATUS_ACTIVITY_STATUS_IMAGE_URL, ""))
+        }
     }
 
     private fun onProgressUpdate(progress: Int) {

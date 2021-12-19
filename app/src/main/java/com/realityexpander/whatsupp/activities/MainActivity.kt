@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity(),
                     }
                     FragmentId.CHAT_LIST.ordinal -> {
                         bind.fab.show()
+                        chatsFragment.onUpdateUI()
                     }
                     FragmentId.STATUS_LIST.ordinal -> {
                         bind.fab.hide()
@@ -164,7 +165,6 @@ class MainActivity : AppCompatActivity(),
     private fun onGoToProfile() {
         startActivity(ProfileActivity.newIntent(this))
     }
-
 
     inner class SectionPagerAdapter(fm: FragmentManager) :
         FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {

@@ -93,7 +93,7 @@ class StatusListFragment: BaseFragment(), StatusItemClickListener, UpdateUIExter
 
 
     // Refresh Partner status list and maybe update the list of partners
-    private fun refreshPartnersStatusList(shouldCollectPartnerUserIds: Boolean) {
+    private fun refreshPartnersStatusList(shouldUpdatePartnerListeners: Boolean) {
 
         bind.progressBar.visibility = View.VISIBLE
 
@@ -119,7 +119,7 @@ class StatusListFragment: BaseFragment(), StatusItemClickListener, UpdateUIExter
                         }
 
                         // setup Listeners for changes to partners status changes
-                        if (shouldCollectPartnerUserIds) {
+                        if (shouldUpdatePartnerListeners) {
                             val partnerStatusListener =
                                 firebaseDB.collection(DATA_USERS_COLLECTION)
                                     .document(partnerId)
@@ -143,7 +143,7 @@ class StatusListFragment: BaseFragment(), StatusItemClickListener, UpdateUIExter
                 // If there are any partner chats for this userId...
                 if (userDoc.contains(DATA_USER_CHATS)) {
                     val partners = userDoc[DATA_USER_CHATS]
-                    if(shouldCollectPartnerUserIds) removeAllPartnerStatusListeners()
+                    if(shouldUpdatePartnerListeners) removeAllPartnerStatusListeners()
 
                     @Suppress("UNCHECKED_CAST")
                     for (partnerId in (partners as HashMap<String, String>).keys) {

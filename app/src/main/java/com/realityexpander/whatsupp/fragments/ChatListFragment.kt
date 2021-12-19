@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.realityexpander.whatsupp.activities.ConversationActivity
 import com.realityexpander.whatsupp.activities.MainActivity
 import com.realityexpander.whatsupp.adapters.ChatsAdapter
@@ -33,6 +34,7 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
     private var chatsAdapter = ChatsAdapter(arrayListOf())
     private val firebaseDB = FirebaseFirestore.getInstance()
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
+    private val partnerStatusListenerSet = mutableSetOf<ListenerRegistration>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,10 +86,14 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
     override fun onResume() {
         super.onResume()
 
-        onUpdateUI()
+        refreshChatsList(true)
     }
 
     override fun onUpdateUI() {
+        refreshChatsList(false)
+    }
+
+    private fun refreshChatsList(shouldUpdatePartnerListeners: Boolean = false) {
         bind.progressBar.visibility = View.VISIBLE
 
         // Refresh chats
@@ -98,12 +104,26 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
                 if (userDocument.contains(DATA_USER_CHATS)) {
                     val partners = userDocument[DATA_USER_CHATS]
                     val chats = arrayListOf<String>()
+                    if(shouldUpdatePartnerListeners) removeAllPartnerStatusListeners()
 
                     // Collect the list of partners for this user
                     @Suppress("UNCHECKED_CAST")
-                    for (partner in (partners as HashMap<String, String>).keys) {
-                        if (partners[partner] != null) {
-                            chats.add(partners[partner]!!)
+                    for (partnerId in (partners as HashMap<String, String>).keys) {
+                        if (partners[partnerId] != null) {
+                            chats.add(partners[partnerId]!!)
+                        }
+
+                        // setup Listeners for changes to partners status changes
+                        if (shouldUpdatePartnerListeners) {
+                            val partnerStatusListener =
+                                firebaseDB.collection(DATA_USERS_COLLECTION)
+                                    .document(partnerId)
+                                    .addSnapshotListener { partnerDoc, firebaseFirestoreException ->
+                                        if (firebaseFirestoreException == null && partnerDoc?.metadata?.isFromCache == false) {
+                                            refreshChatsList(false)
+                                        }
+                                    }
+                            partnerStatusListenerSet.add(partnerStatusListener)
                         }
                     }
                     chatsAdapter.updateChats(chats)
@@ -113,6 +133,12 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
             .addOnFailureListener {
                 bind.progressBar.visibility = View.INVISIBLE
             }
+    }
+    private fun removeAllPartnerStatusListeners() {
+        for(partnerStatusListener in partnerStatusListenerSet) {
+            partnerStatusListener.remove()
+        }
+        partnerStatusListenerSet.clear()
     }
 
     fun newChat(partnerId: String) {

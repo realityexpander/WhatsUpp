@@ -17,10 +17,7 @@ import com.realityexpander.whatsupp.adapters.StatusListAdapter
 import com.realityexpander.whatsupp.databinding.FragmentStatusListBinding
 import com.realityexpander.whatsupp.interfaces.UpdateUIExternally
 import com.realityexpander.whatsupp.listeners.StatusItemClickListener
-import com.realityexpander.whatsupp.utils.DATA_USERS_COLLECTION
-import com.realityexpander.whatsupp.utils.DATA_USER_CHATS
-import com.realityexpander.whatsupp.utils.StatusListItem
-import com.realityexpander.whatsupp.utils.User
+import com.realityexpander.whatsupp.utils.*
 
 /**
  * A simple [Fragment] subclass.
@@ -142,11 +139,11 @@ class StatusListFragment: BaseFragment(), StatusItemClickListener, UpdateUIExter
 
                 // If there are any partner chats for this userId...
                 if (userDoc.contains(DATA_USER_CHATS)) {
-                    val partners = userDoc[DATA_USER_CHATS]
+                    val partnerIds = userDoc[DATA_USER_CHATS]
                     if(shouldUpdatePartnerListeners) removeAllPartnerStatusListeners()
 
                     @Suppress("UNCHECKED_CAST")
-                    for (partnerId in (partners as HashMap<String, String>).keys) {
+                    for (partnerId in (partnerIds as HashMap<PartnerId, ChatId>).keys) {
 
                         addPartnerToStatusList(partnerId)
                     }

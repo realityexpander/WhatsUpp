@@ -3,6 +3,10 @@ package com.realityexpander.whatsupp.utils
 import android.os.Parcel
 import android.os.Parcelable
 
+typealias PartnerId = String
+typealias UserId = String
+typealias ChatId = String
+
 data class User (
     val email: String? = "",
     val username: String? = "",

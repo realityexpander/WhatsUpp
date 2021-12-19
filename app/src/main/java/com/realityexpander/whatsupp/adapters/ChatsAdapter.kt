@@ -29,8 +29,8 @@ class ChatsAdapter(val chats: ArrayList<String>):
         private var chatNameTv = view.findViewById<TextView>(R.id.chatTv)
         private var progressLayout = view.findViewById<LinearLayout>(R.id.progressLayout)
         private var partnerId: String? = null
-        private var chatImageUrl: String? = null
-        private var chatName: String? = null
+        private var chatPartnerProfileImageUrl: String? = null
+        private var chatPartnerUsername: String? = null
 
         @SuppressLint("ClickableViewAccessibility") // for progressLayout event trapper
         fun bind(chatId: String, listener: ChatsClickListener?) {
@@ -57,8 +57,8 @@ class ChatsAdapter(val chats: ArrayList<String>):
                                     .get()
                                     .addOnSuccessListener { documentSnap ->
                                         val user = documentSnap.toObject(User::class.java)
-                                        chatImageUrl = user?.profileImageUrl
-                                        chatName = user?.username
+                                        chatPartnerProfileImageUrl = user?.profileImageUrl
+                                        chatPartnerUsername = user?.username
                                         chatNameTv.text = user?.username
                                         chatIv.loadUrl(user?.profileImageUrl, R.drawable.default_user)
                                         progressLayout.visibility = View.GONE
@@ -78,7 +78,7 @@ class ChatsAdapter(val chats: ArrayList<String>):
 
             // Navigate the the Chat for this partner
             layout.setOnClickListener {
-                listener?.onChatClicked(chatId, partnerId, chatImageUrl, chatName)
+                listener?.onChatClicked(chatId, partnerId, chatPartnerProfileImageUrl, chatPartnerUsername)
             }
 
             progressLayout.setOnTouchListener { _, _ -> true /* do nothing */  }

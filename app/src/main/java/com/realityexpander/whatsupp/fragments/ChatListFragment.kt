@@ -16,10 +16,7 @@ import com.realityexpander.whatsupp.adapters.ChatsAdapter
 import com.realityexpander.whatsupp.databinding.FragmentChatsBinding
 import com.realityexpander.whatsupp.interfaces.UpdateUIExternally
 import com.realityexpander.whatsupp.listeners.ChatsClickListener
-import com.realityexpander.whatsupp.utils.Chat
-import com.realityexpander.whatsupp.utils.DATA_CHATS_COLLECTION
-import com.realityexpander.whatsupp.utils.DATA_USERS_COLLECTION
-import com.realityexpander.whatsupp.utils.DATA_USER_CHATS
+import com.realityexpander.whatsupp.utils.*
 
 /**
  * A simple [Fragment] subclass.
@@ -102,15 +99,15 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
             .get()
             .addOnSuccessListener { userDocument ->
                 if (userDocument.contains(DATA_USER_CHATS)) {
-                    val partners = userDocument[DATA_USER_CHATS]
+                    val partnerIds = userDocument[DATA_USER_CHATS]
                     val chats = arrayListOf<String>()
                     if(shouldUpdatePartnerListeners) removeAllPartnerStatusListeners()
 
                     // Collect the list of partners for this user
                     @Suppress("UNCHECKED_CAST")
-                    for (partnerId in (partners as HashMap<String, String>).keys) {
-                        if (partners[partnerId] != null) {
-                            chats.add(partners[partnerId]!!)
+                    for (partnerId in (partnerIds as HashMap<PartnerId, ChatId>).keys) {
+                        if (partnerIds[partnerId] != null) {
+                            chats.add(partnerIds[partnerId]!!)
                         }
 
                         // setup Listeners for changes to partners status changes
@@ -146,55 +143,60 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
             .document(userId!!)
             .get()
             .addOnSuccessListener { userDocument ->
-                val userChatPartnersMap = hashMapOf<String, String>()
+                val user_ChatsMap = hashMapOf<PartnerId, ChatId>()
 
-                // Create the chat for this user (if it doesn't already exist)
-                userDocument[DATA_USER_CHATS]?.let { userDocumentUserChats ->
-                    if (userDocumentUserChats is HashMap<*, *>) {
+                // Create the chat for the current userId (if it doesn't already exist)
+                userDocument[DATA_USER_CHATS]?.let { user_DocumentChatMap ->
+                    if (user_DocumentChatMap is HashMap<*, *>) {
                         @Suppress("UNCHECKED_CAST")
-                        val userChatsMap = userDocumentUserChats as HashMap<String, String>
+                        val user_SavedChatsMap = user_DocumentChatMap as HashMap<PartnerId, ChatId>
 
-                        if (userChatsMap.containsKey(partnerId)) {
-                            return@addOnSuccessListener
+                        // Does a chat already exist for this partnerId?
+                        if (user_SavedChatsMap.containsKey(partnerId)) {
+                            return@addOnSuccessListener // no need to add a new Chat map.
                         } else {
-                            userChatPartnersMap.putAll(userChatsMap)
+                            user_ChatsMap.putAll(user_SavedChatsMap)
                         }
                     }
                 }
 
-                // Create the chat for the partner (if it doesn't already exist)
+                // Create the chat for the partnerId (it should not exist, we checked above!)
                 firebaseDB.collection(DATA_USERS_COLLECTION)
                     .document(partnerId)
                     .get()
                     .addOnSuccessListener { partnerDocument ->
-                        val partnerChatPartnersMap = hashMapOf<String, String>()
+                        val partner_ChatsMap = hashMapOf<PartnerId, ChatId>()
 
                         // Create the chat for the partner (if it doesn't already exist)
-                        partnerDocument[DATA_USER_CHATS]?.let { partnerDocumentUserChats ->
-                            if (partnerDocumentUserChats is HashMap<*, *>) {
+                        partnerDocument[DATA_USER_CHATS]?.let { partner_DocumentChatsMap ->
+                            if (partner_DocumentChatsMap is HashMap<*, *>) {
                                 @Suppress("UNCHECKED_CAST")
-                                val partnerChatsMap = partnerDocumentUserChats as HashMap<String, String>
-                                partnerChatPartnersMap.putAll(partnerChatsMap)
+                                val partner_SavedChatsMap = partner_DocumentChatsMap as HashMap<PartnerId, ChatId>
+                                partner_ChatsMap.putAll(partner_SavedChatsMap)
                             }
                         }
 
-                        // Prepare to save the new chat and update the user and partner
+                        // Prepare to save the new chat then update the user and partner
                         val chatParticipants = arrayListOf(userId, partnerId)
                         val chat = Chat(chatParticipants)
-                        val chatDocRef = firebaseDB.collection(DATA_CHATS_COLLECTION).document()
+                        val newChatDocRef = firebaseDB.collection(DATA_CHATS_COLLECTION).document() // new document
                         val userDocRef = firebaseDB.collection(DATA_USERS_COLLECTION).document(userId)
                         val partnerDocRef = firebaseDB.collection(DATA_USERS_COLLECTION).document(partnerId)
 
-                        userChatPartnersMap[partnerId] = chatDocRef.id
-                        partnerChatPartnersMap[userId] = chatDocRef.id
+                        // point both user and partner to the same chat document
+                        user_ChatsMap[partnerId] = newChatDocRef.id
+                        partner_ChatsMap[userId] = newChatDocRef.id
 
-                        // Update the database for user & partner chats at same time
+                        // Update the database for user & partner chat map at same time
                         val batch = firebaseDB.batch()
-                        batch.set(chatDocRef, chat)
-                        batch.update(userDocRef, DATA_USER_CHATS, userChatPartnersMap)
-                        batch.update(partnerDocRef, DATA_USER_CHATS, partnerChatPartnersMap)
+                        batch.set(newChatDocRef, chat)
+                        batch.update(userDocRef, DATA_USER_CHATS, user_ChatsMap)
+                        batch.update(partnerDocRef, DATA_USER_CHATS, partner_ChatsMap)
                         batch.commit()
 
+                        // Start chat now
+                        val partner = partnerDocument.toObject(User::class.java)
+                        onChatClicked(newChatDocRef.id, partnerId, partner?.profileImageUrl, partner?.username)
                     }
                     .addOnFailureListener { e ->
                         e.printStackTrace()
@@ -208,16 +210,16 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
 
     override fun onChatClicked(
         chatId: String?,
-        partnerUserId: String?,
-        chatImageUrl: String?,
-        chatName: String?,
+        partnerId: String?,
+        partnerProfileImageUrl: String?,
+        partnerUsername: String?,
     ) {
         startActivity(
             ConversationActivity.newIntent(context,
             chatId,
-            chatImageUrl,
-            partnerUserId,
-            chatName)
+            partnerProfileImageUrl,
+            partnerId,
+            partnerUsername)
         )
     }
 }

@@ -33,7 +33,7 @@ class ConversationActivity : AppCompatActivity() {
 
         chatId = intent.extras?.getString(CONVERSATIONS_PARAM_CHAT_ID)
         imageUrl = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_PROFILE_IMAGE_URL)
-        chatName = intent.extras?.getString(CONVERSATIONS_PARAM_CHAT_NAME)
+        chatName = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_USERNAME)
         otherUserId = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_USER_ID)
         if (chatId.isNullOrEmpty() || userId.isNullOrEmpty()) {
             Toast.makeText(this, "Chat room error, chatId or userId is bad.", Toast.LENGTH_SHORT).show()
@@ -85,6 +85,29 @@ class ConversationActivity : AppCompatActivity() {
             }
     }
 
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        // println("onSaveInstanceState for ProfileActivity")
+//
+//        outState.apply {
+//            putString(SIGNUP_ACTIVITY_EMAIL, bind.emailEt.text.toString())
+//            putString(SIGNUP_ACTIVITY_USERNAME, bind.nameEt.text.toString())
+//            putString(SIGNUP_ACTIVITY_PHONE_NUMBER, bind.phoneEt.text.toString())
+//            putString(SIGNUP_ACTIVITY_PASSWORD, bind.passwordEt.text.toString())
+//        }
+//    }
+//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+//        super.onRestoreInstanceState(savedInstanceState)
+//        // println("onRestoreInstanceState for ProfileActivity")
+//
+//        savedInstanceState.apply {
+//            bind.emailEt.setText(getString(SIGNUP_ACTIVITY_EMAIL, ""))
+//            bind.nameEt.setText(getString(SIGNUP_ACTIVITY_USERNAME, ""))
+//            bind.phoneEt.setText(getString(SIGNUP_ACTIVITY_PHONE_NUMBER, ""))
+//            bind.passwordEt.setText(getString(SIGNUP_ACTIVITY_PASSWORD, ""))
+//        }
+//    }
+
     @Suppress("UNUSED_PARAMETER")
     fun onSend(v: View) {
         if (!bind.messageET.text.isNullOrEmpty()) {
@@ -110,15 +133,15 @@ class ConversationActivity : AppCompatActivity() {
         fun newIntent(
             context: Context?,
             chatId: String?,
-            imageUrl: String?,
-            otherUserId: String?,
-            chatName: String?
+            partnerProfileImageUrl: String?,
+            partnerId: String?,
+            partnerUsername: String?
         ): Intent {
             val intent = Intent(context, ConversationActivity::class.java)
             intent.putExtra(CONVERSATIONS_PARAM_CHAT_ID, chatId)
-            intent.putExtra(CONVERSATIONS_PARAM_PARTNER_PROFILE_IMAGE_URL, imageUrl)
-            intent.putExtra(CONVERSATIONS_PARAM_PARTNER_USER_ID, otherUserId)
-            intent.putExtra(CONVERSATIONS_PARAM_CHAT_NAME, chatName)
+            intent.putExtra(CONVERSATIONS_PARAM_PARTNER_PROFILE_IMAGE_URL, partnerProfileImageUrl)
+            intent.putExtra(CONVERSATIONS_PARAM_PARTNER_USER_ID, partnerId)
+            intent.putExtra(CONVERSATIONS_PARAM_PARTNER_USERNAME, partnerUsername)
             return intent
         }
     }

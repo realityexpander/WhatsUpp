@@ -64,3 +64,8 @@ const val LOGIN_ACTIVITY_EMAIL = "loginActivity_emailAddress"
 const val STATUS_ACTIVITY_STATUS_MESSAGE = "statusActivity_statusMessage"
 const val STATUS_ACTIVITY_STATUS_DATE = "statusActivity_statusDate"
 const val STATUS_ACTIVITY_STATUS_IMAGE_URL = "statusActivity_statusImageUrl"
+
+const val CONVERSATION_ACTIVITY_CHAT_ID = "conversationActivity_chatId"
+const val CONVERSATION_ACTIVITY_PARTNER_ID = "conversationActivity_partnerId"
+const val CONVERSATION_ACTIVITY_PARTNER_PROFILE_USERNAME = "conversationActivity_profileUsername"
+const val CONVERSATION_ACTIVITY_PARTNER_PROFILE_IMAGE_URL = "conversationActivity_profileImageUrl"

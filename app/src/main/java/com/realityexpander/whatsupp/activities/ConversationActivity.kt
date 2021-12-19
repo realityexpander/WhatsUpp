@@ -1,9 +1,11 @@
 package com.realityexpander.whatsupp.activities
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -22,26 +24,36 @@ class ConversationActivity : AppCompatActivity() {
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
     private val conversationAdapter = ConversationAdapter(arrayListOf(), userId)
     private var chatId: String? = null
-    private var imageUrl: String? = null
-    private var otherUserId: String? = null
-    private var chatName: String? = null
+    private var partnerProfileimageUrl: String? = null
+    private var partnerId: String? = null
+    private var partnerUsername: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind = ActivityConversationBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
-        chatId = intent.extras?.getString(CONVERSATIONS_PARAM_CHAT_ID)
-        imageUrl = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_PROFILE_IMAGE_URL)
-        chatName = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_USERNAME)
-        otherUserId = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_USER_ID)
+        title = getApplicationName(this) + " Chat"
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        if (intent != null) {
+            chatId = intent.extras?.getString(CONVERSATIONS_PARAM_CHAT_ID)
+            partnerProfileimageUrl =
+                intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_PROFILE_IMAGE_URL)
+            partnerUsername = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_USERNAME)
+            partnerId = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_USER_ID)
+        } else if (savedInstanceState != null) {
+            onRestoreInstanceState(savedInstanceState)
+        }
+
         if (chatId.isNullOrEmpty() || userId.isNullOrEmpty()) {
             Toast.makeText(this, "Chat room error, chatId or userId is bad.", Toast.LENGTH_SHORT).show()
             finish()
         }
 
-        bind.topNameTV.text = chatName
-        bind.topPhotoIV.loadUrl(imageUrl, R.drawable.default_user)
+        bind.partnerProfileUsernameTv.text = partnerUsername
+        bind.partnerProfileImageIv.loadUrl(partnerProfileimageUrl, R.drawable.default_user)
 
         bind.messagesRV.apply {
             setHasFixedSize(false)
@@ -85,28 +97,33 @@ class ConversationActivity : AppCompatActivity() {
             }
     }
 
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        // println("onSaveInstanceState for ProfileActivity")
-//
-//        outState.apply {
-//            putString(SIGNUP_ACTIVITY_EMAIL, bind.emailEt.text.toString())
-//            putString(SIGNUP_ACTIVITY_USERNAME, bind.nameEt.text.toString())
-//            putString(SIGNUP_ACTIVITY_PHONE_NUMBER, bind.phoneEt.text.toString())
-//            putString(SIGNUP_ACTIVITY_PASSWORD, bind.passwordEt.text.toString())
-//        }
-//    }
-//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-//        super.onRestoreInstanceState(savedInstanceState)
-//        // println("onRestoreInstanceState for ProfileActivity")
-//
-//        savedInstanceState.apply {
-//            bind.emailEt.setText(getString(SIGNUP_ACTIVITY_EMAIL, ""))
-//            bind.nameEt.setText(getString(SIGNUP_ACTIVITY_USERNAME, ""))
-//            bind.phoneEt.setText(getString(SIGNUP_ACTIVITY_PHONE_NUMBER, ""))
-//            bind.passwordEt.setText(getString(SIGNUP_ACTIVITY_PASSWORD, ""))
-//        }
-//    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // println("onSaveInstanceState for ProfileActivity")
+
+        outState.apply {
+            putString(CONVERSATION_ACTIVITY_CHAT_ID, chatId)
+            putString(CONVERSATION_ACTIVITY_PARTNER_ID, partnerId)
+            putString(CONVERSATION_ACTIVITY_PARTNER_PROFILE_USERNAME, partnerUsername)
+            putString(CONVERSATION_ACTIVITY_PARTNER_PROFILE_IMAGE_URL, partnerProfileimageUrl)
+        }
+    }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // println("onRestoreInstanceState for ProfileActivity")
+
+        savedInstanceState.apply {
+            chatId = getString(CONVERSATION_ACTIVITY_CHAT_ID, "")
+            partnerId = getString(CONVERSATION_ACTIVITY_PARTNER_ID, "")
+            partnerUsername = getString(CONVERSATION_ACTIVITY_PARTNER_PROFILE_USERNAME, "")
+            partnerProfileimageUrl = getString(CONVERSATION_ACTIVITY_PARTNER_PROFILE_IMAGE_URL)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return true
+    }
 
     @Suppress("UNUSED_PARAMETER")
     fun onSend(v: View) {

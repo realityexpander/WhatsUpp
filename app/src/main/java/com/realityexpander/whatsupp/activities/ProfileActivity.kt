@@ -64,7 +64,7 @@ class ProfileActivity : AppCompatActivity() {
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Setup progress tap-eater
+        // Setup progressLayout tap event blocker
         bind.progressLayout.setOnTouchListener { _, _ ->
             true // this will block any tap events
         }

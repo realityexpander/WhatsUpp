@@ -1,7 +1,7 @@
 package com.realityexpander.whatsupp.listeners
 
 interface ChatsClickListener {
-    fun onChatClicked(
+    fun onChatItemClicked(
         chatId: String?,
         partnerId: String?,
         partnerProfileImageUrl: String?,

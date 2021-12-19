@@ -1,6 +1,5 @@
 package com.realityexpander.whatsupp.activities
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -24,7 +23,7 @@ class ConversationActivity : AppCompatActivity() {
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
     private val conversationAdapter = ConversationAdapter(arrayListOf(), userId)
     private var chatId: String? = null
-    private var partnerProfileimageUrl: String? = null
+    private var partnerProfileImageUrl: String? = null
     private var partnerId: String? = null
     private var partnerUsername: String? = null
 
@@ -39,7 +38,7 @@ class ConversationActivity : AppCompatActivity() {
 
         if (intent != null) {
             chatId = intent.extras?.getString(CONVERSATIONS_PARAM_CHAT_ID)
-            partnerProfileimageUrl =
+            partnerProfileImageUrl =
                 intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_PROFILE_IMAGE_URL)
             partnerUsername = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_USERNAME)
             partnerId = intent.extras?.getString(CONVERSATIONS_PARAM_PARTNER_USER_ID)
@@ -53,7 +52,7 @@ class ConversationActivity : AppCompatActivity() {
         }
 
         bind.partnerProfileUsernameTv.text = partnerUsername
-        bind.partnerProfileImageIv.loadUrl(partnerProfileimageUrl, R.drawable.default_user)
+        bind.partnerProfileImageIv.loadUrl(partnerProfileImageUrl, R.drawable.default_user)
 
         bind.messagesRV.apply {
             setHasFixedSize(false)
@@ -105,7 +104,7 @@ class ConversationActivity : AppCompatActivity() {
             putString(CONVERSATION_ACTIVITY_CHAT_ID, chatId)
             putString(CONVERSATION_ACTIVITY_PARTNER_ID, partnerId)
             putString(CONVERSATION_ACTIVITY_PARTNER_PROFILE_USERNAME, partnerUsername)
-            putString(CONVERSATION_ACTIVITY_PARTNER_PROFILE_IMAGE_URL, partnerProfileimageUrl)
+            putString(CONVERSATION_ACTIVITY_PARTNER_PROFILE_IMAGE_URL, partnerProfileImageUrl)
         }
     }
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -116,7 +115,7 @@ class ConversationActivity : AppCompatActivity() {
             chatId = getString(CONVERSATION_ACTIVITY_CHAT_ID, "")
             partnerId = getString(CONVERSATION_ACTIVITY_PARTNER_ID, "")
             partnerUsername = getString(CONVERSATION_ACTIVITY_PARTNER_PROFILE_USERNAME, "")
-            partnerProfileimageUrl = getString(CONVERSATION_ACTIVITY_PARTNER_PROFILE_IMAGE_URL)
+            partnerProfileImageUrl = getString(CONVERSATION_ACTIVITY_PARTNER_PROFILE_IMAGE_URL)
         }
     }
 

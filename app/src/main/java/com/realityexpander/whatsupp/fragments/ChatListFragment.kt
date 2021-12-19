@@ -195,7 +195,7 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
 
                         // Start chat now
                         val partner = partnerDocument.toObject(User::class.java)
-                        onChatClicked(newChatDocRef.id, partnerId, partner?.profileImageUrl, partner?.username)
+                        onChatItemClicked(newChatDocRef.id, partnerId, partner?.profileImageUrl, partner?.username)
                     }
                     .addOnFailureListener { e ->
                         e.printStackTrace()
@@ -207,7 +207,7 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
 
     }
 
-    override fun onChatClicked(
+    override fun onChatItemClicked(
         chatId: String?,
         partnerId: String?,
         partnerProfileImageUrl: String?,

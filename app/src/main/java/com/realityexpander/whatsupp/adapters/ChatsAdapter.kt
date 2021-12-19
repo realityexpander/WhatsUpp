@@ -78,7 +78,7 @@ class ChatsAdapter(val chats: ArrayList<String>):
 
             // Navigate the the Chat for this partner
             layout.setOnClickListener {
-                listener?.onChatClicked(chatId, partnerId, chatPartnerProfileImageUrl, chatPartnerUsername)
+                listener?.onChatItemClicked(chatId, partnerId, chatPartnerProfileImageUrl, chatPartnerUsername)
             }
 
             progressLayout.setOnTouchListener { _, _ -> true /* do nothing */  }

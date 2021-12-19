@@ -33,7 +33,7 @@ class StatusUpdateFragment: BaseFragment(), UpdateUIExternally {
     private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
 
     private var pickedImageUri: Uri? = null // uri to an image file on android device before updating status
-    private var savedStatusImageUrl = "" // url in firestore db after the user updates status
+    private var savedStatusImageUrl = "" // url saved in DB after user updates status
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

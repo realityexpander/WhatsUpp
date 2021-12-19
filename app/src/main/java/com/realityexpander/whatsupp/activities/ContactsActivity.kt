@@ -72,7 +72,6 @@ class ContactsActivity : AppCompatActivity(), ContactsClickListener {
             }
         )
 
-
         setupContactList()
     }
     private fun setupContactList() {

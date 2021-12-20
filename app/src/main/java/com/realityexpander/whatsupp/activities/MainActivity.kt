@@ -32,6 +32,11 @@ import com.realityexpander.whatsupp.interfaces.HostContextI
 import com.realityexpander.whatsupp.listeners.UserNotLoggedInError
 import com.realityexpander.whatsupp.utils.*
 
+// Firebase Console
+// Project: https://console.firebase.google.com/u/2/project/whatsupp-zapr/settings/general/android:com.realityexpander.whatsupp
+// Firebase: https://console.firebase.google.com/u/2/project/whatsupp-zapr/firestore/data/~2F
+// Storage: https://console.firebase.google.com/u/2/project/whatsupp-zapr/storage/whatsupp-zapr.appspot.com/files/~2FprofileImageUrl
+// Extras: https://devupskill.net/lessons/main-screen-pager-layout/
 
 class MainActivity : AppCompatActivity(),
     UserNotLoggedInError,

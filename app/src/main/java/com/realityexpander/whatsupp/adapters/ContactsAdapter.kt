@@ -79,6 +79,7 @@ class ContactsAdapter(val contactList: ArrayList<Contact>):
                 charSequence: CharSequence?,
                 filterResults: FilterResults
             ) {
+                @Suppress("UNCHECKED_CAST")
                 contactListFiltered = filterResults.values as ArrayList<Contact>
 
                 // refresh the list with filtered data

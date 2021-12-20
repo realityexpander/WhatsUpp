@@ -59,7 +59,7 @@ class ConversationActivity : AppCompatActivity() {
             adapter = conversationAdapter
         }
 
-        // Listen for database changes (ie: messages)
+        // Listen for chat messages in database
         firebaseDB.collection(DATA_CHATS_COLLECTION)
             .document(chatId!!)
             .collection(DATA_CHAT_MESSAGES_COLLECTION)

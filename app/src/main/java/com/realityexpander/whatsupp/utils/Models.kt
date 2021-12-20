@@ -11,13 +11,14 @@ data class User (
     val email: String? = "",
     val username: String? = "",
     val phone: String? = "",
-    val trimmedPhone: String? = "",  // number with trimmed extra characters to improve searches
+    val phoneTrimmed: String? = "",  // number with trimmed extra characters to improve searches
     val uid: String? = "",
     val profileImageUrl: String? = "",
     val statusImageUrl: String? = "",
     val statusMessage: String? = "",
     val statusTimestamp: String = "",
-    val statusDate: String = ""
+    val statusDate: String = "",
+    val userchats: HashMap<PartnerId, ChatId> = HashMap()
 )
 
 data class Contact(

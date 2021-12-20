@@ -136,7 +136,7 @@ class SignupActivity : AppCompatActivity() {
                             email = email,
                             username = name,
                             phone = phone,
-                            trimmedPhone = phone.trimUnnecessaryPhoneCharacters(),
+                            phoneTrimmed = phone.trimUnnecessaryPhoneCharacters(),
                             uid = firebaseAuth.uid,
                             "",
                             statusMessage = "Hello, I'm new.",

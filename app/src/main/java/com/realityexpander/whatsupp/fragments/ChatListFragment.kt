@@ -28,10 +28,12 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
     private val bind: FragmentChatsBinding
         get() = _bind!!
 
-    private var chatsAdapter = ChatsAdapter(arrayListOf())
+//    private var chatsAdapter = ChatsAdapter(arrayListOf<ChatId>())
+    private var chatsAdapter = ChatsAdapter(arrayListOf<ChatIdAndUnreadCount>())
     private val firebaseDB = FirebaseFirestore.getInstance()
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
     private val partnerStatusListenerSet = mutableSetOf<ListenerRegistration>()
+    private val unreadChatListenerSet = mutableSetOf<ListenerRegistration>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -88,14 +90,14 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
 
     override fun onPause() {
         super.onPause()
-        removeAllPartnerStatusListeners()
+        removeAllUpdateListeners()
     }
 
     override fun onUpdateUI() {
         refreshChatsList(false)
     }
 
-    private fun refreshChatsList(shouldUpdatePartnerListeners: Boolean = false) {
+    private fun refreshChatsList(shouldRefreshUpdateListeners: Boolean = false) {
         bind.progressBar.visibility = View.VISIBLE
 
         // Refresh chats
@@ -104,19 +106,22 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
             .get()
             .addOnSuccessListener { userDocument ->
                 if (userDocument.contains(DATA_USER_CHATS)) {
-                    val partnerIds = userDocument[DATA_USER_CHATS]
-                    val chats = arrayListOf<String>()
-                    if(shouldUpdatePartnerListeners) removeAllPartnerStatusListeners()
+                    val partnerChatIds = userDocument[DATA_USER_CHATS]
+//                    val chats = arrayListOf<ChatId>()
+                    val chats = arrayListOf<ChatIdAndUnreadCount>()
+                    if(shouldRefreshUpdateListeners) removeAllUpdateListeners()
 
                     // Collect the list of partners for this user
                     @Suppress("UNCHECKED_CAST")
-                    for (partnerId in (partnerIds as HashMap<PartnerId, ChatId>).keys) {
-                        if (partnerIds[partnerId] != null) {
-                            chats.add(partnerIds[partnerId]!!)
+                    for ((index, partnerId) in (partnerChatIds as HashMap<PartnerId, ChatId>).keys.withIndex()) {
+                        if (partnerChatIds[partnerId] != null) {
+                            chats.add(ChatIdAndUnreadCount(partnerChatIds[partnerId]!!))
                         }
 
                         // setup Listeners for changes to partners status changes
-                        if (shouldUpdatePartnerListeners) {
+                        if (shouldRefreshUpdateListeners) {
+
+                            // Partner Status listener
                             val partnerStatusListener =
                                 firebaseDB.collection(DATA_USERS_COLLECTION)
                                     .document(partnerId)
@@ -126,7 +131,23 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
                                         }
                                     }
                             partnerStatusListenerSet.add(partnerStatusListener)
+
+                            // Unread Chat Count listener
+                            val unreadChatListener = firebaseDB.collection(DATA_CHATS_COLLECTION)
+                                .document(partnerChatIds[partnerId]!!)
+                                .collection(DATA_CHAT_MESSAGES_COLLECTION)
+                                .orderBy(DATA_CHAT_MESSAGE_TIMESTAMP)
+                                .whereGreaterThan(DATA_CHAT_MESSAGE_TIMESTAMP, System.currentTimeMillis())
+                                .addSnapshotListener { messagesDoc, firebaseFirestoreException ->
+                                    if (firebaseFirestoreException == null && messagesDoc?.metadata?.isFromCache == false) {
+                                        // println("num unread messages: ${messagesDoc.size()}")
+                                        chats[index].unreadChatCount = messagesDoc.size()
+                                        chatsAdapter.updateChats(chats)
+                                    }
+                                }
+                            unreadChatListenerSet.add(unreadChatListener)
                         }
+
                     }
                     chatsAdapter.updateChats(chats)
                     bind.progressBar.visibility = View.INVISIBLE
@@ -136,11 +157,16 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
                 bind.progressBar.visibility = View.INVISIBLE
             }
     }
-    private fun removeAllPartnerStatusListeners() {
+    private fun removeAllUpdateListeners() {
         for(partnerStatusListener in partnerStatusListenerSet) {
             partnerStatusListener.remove()
         }
         partnerStatusListenerSet.clear()
+
+        for(unreadChatListener in unreadChatListenerSet) {
+            unreadChatListener.remove()
+        }
+        unreadChatListenerSet.clear()
     }
 
     fun newChat(partnerId: String) {

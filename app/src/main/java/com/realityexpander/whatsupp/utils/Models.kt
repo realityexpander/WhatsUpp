@@ -26,14 +26,19 @@ data class Contact(
 )
 
 data class Chat(
-    val chatParticipants: ArrayList<String>
+    val chatParticipants: ArrayList<UserId>
+)
+
+data class ChatIdAndUnreadCount(
+    val chatId: ChatId,
+    var unreadChatCount: Int = 0
 )
 
 data class Message(
     val timestamp: Long? = 0L,
-    val fromUserId: String? = "",
+    val fromUserId: UserId? = "",
     val fromUserName: String? = "",
-    val toUserId: String? = "",
+    val toUserId: UserId? = "",
     val toUserName: String? = "",
     val message: String? = "",
     val imageUrl: String? = ""

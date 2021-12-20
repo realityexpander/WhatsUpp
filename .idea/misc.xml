@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable/danger_button_rounded.xml" value="0.329" />
         <entry key="app/src/main/res/drawable/navigation_shadow.xml" value="0.1605" />
+        <entry key="app/src/main/res/drawable/rounded_corner.xml" value="0.1265" />
         <entry key="app/src/main/res/drawable/send_button_rounded.xml" value="0.1605" />
         <entry key="app/src/main/res/drawable/standard_button_rounded.xml" value="0.3195" />
         <entry key="app/src/main/res/drawable/update_status_background.xml" value="0.204" />
@@ -21,7 +22,7 @@
         <entry key="app/src/main/res/layout/fragment_status.xml" value="0.3307291666666667" />
         <entry key="app/src/main/res/layout/fragment_status_list.xml" value="0.221889696451475" />
         <entry key="app/src/main/res/layout/fragment_status_update.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/item_chat.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/item_chat.xml" value="0.14" />
         <entry key="app/src/main/res/layout/item_contact.xml" value="0.2869791666666667" />
         <entry key="app/src/main/res/layout/item_other_user_message.xml" value="0.31302083333333336" />
         <entry key="app/src/main/res/layout/item_status_list.xml" value="0.22" />

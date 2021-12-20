@@ -16,7 +16,8 @@ import com.realityexpander.whatsupp.listeners.ChatsClickListener
 import com.realityexpander.whatsupp.utils.*
 
 
-class ChatsAdapter(val chats: ArrayList<String>):
+//class ChatsAdapter(val chats: ArrayList<ChatId>):
+class ChatsAdapter(val chats: ArrayList<ChatIdAndUnreadCount>):
     RecyclerView.Adapter<ChatsAdapter.ChatsViewHolder>() {
 
     private var clickListener: ChatsClickListener? = null
@@ -27,19 +28,22 @@ class ChatsAdapter(val chats: ArrayList<String>):
         private var layout = view.findViewById<RelativeLayout>(R.id.chatLayout)
         private var chatIv = view.findViewById<ImageView>(R.id.chatIv)
         private var chatNameTv = view.findViewById<TextView>(R.id.chatTv)
+        private var chatUnreadCountTv = view.findViewById<TextView>(R.id.chatUnreadCountTv)
         private var progressLayout = view.findViewById<LinearLayout>(R.id.progressLayout)
         private var partnerId: String? = null
         private var chatPartnerProfileImageUrl: String? = null
         private var chatPartnerUsername: String? = null
 
         @SuppressLint("ClickableViewAccessibility") // for progressLayout event trapper
-        fun bind(chatId: String, listener: ChatsClickListener?) {
+//        fun bind(chatId: ChatId, listener: ChatsClickListener?) {
+        fun bind(chat: ChatIdAndUnreadCount, listener: ChatsClickListener?) {
             progressLayout.visibility = View.VISIBLE
-            progressLayout.setOnTouchListener {_, _ -> true }
+            progressLayout.setOnTouchListener { _, _ -> true /* do nothing */  }
 
             // Fill in partnerId data for this chatId
             firebaseDB.collection(DATA_CHATS_COLLECTION)
-                .document(chatId)
+//                .document(chatId)
+                .document(chat.chatId)
                 .get()
                 .addOnSuccessListener { chatDocument ->
                     val chatParticipants = chatDocument[DATA_CHAT_PARTICIPANTS]
@@ -48,7 +52,7 @@ class ChatsAdapter(val chats: ArrayList<String>):
                     chatParticipants?.let {
                         @Suppress("UNCHECKED_CAST")
                         for(participant in chatParticipants as ArrayList<String>) {
-                            if(participant != userId) {
+                            if(participant != userId) { // don't include the current user in the list
                                 partnerId = participant
 
                                 // Look up the partner info
@@ -76,12 +80,18 @@ class ChatsAdapter(val chats: ArrayList<String>):
                     progressLayout.visibility = View.GONE
                 }
 
-            // Navigate the the Chat for this partner
-            layout.setOnClickListener {
-                listener?.onChatItemClicked(chatId, partnerId, chatPartnerProfileImageUrl, chatPartnerUsername)
+            if(chat.unreadChatCount > 0) {
+                chatUnreadCountTv.visibility = View.VISIBLE
+                chatUnreadCountTv.text = chat.unreadChatCount.toString()
+            } else {
+                chatUnreadCountTv.visibility = View.INVISIBLE
             }
 
-            progressLayout.setOnTouchListener { _, _ -> true /* do nothing */  }
+            // Navigate the the Chat for this partner
+            layout.setOnClickListener {
+//                listener?.onChatItemClicked(chatId, partnerId, chatPartnerProfileImageUrl, chatPartnerUsername)
+                listener?.onChatItemClicked(chat.chatId, partnerId, chatPartnerProfileImageUrl, chatPartnerUsername)
+            }
         }
     }
 
@@ -93,7 +103,8 @@ class ChatsAdapter(val chats: ArrayList<String>):
         holder.bind(chats[position], clickListener)
     }
 
-    fun updateChats(updatedChats: ArrayList<String>) {
+//    fun updateChats(updatedChats: ArrayList<ChatId>) {
+    fun updateChats(updatedChats: ArrayList<ChatIdAndUnreadCount>) {
         chats.clear()
         chats.addAll(updatedChats)
         notifyDataSetChanged()

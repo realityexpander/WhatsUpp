@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tool="http://schemas.android.com/tools"
         android:id="@+id/chatLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,16 +29,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/chatCv"
+            android:layout_alignTop="@id/chatCv"
             android:paddingStart="@dimen/grid_2x"
             android:paddingEnd="@dimen/grid_2x"
+            tool:text="UserName Here"
             android:layout_centerVertical="true"
             style="@style/Title"/>
 
+    <TextView
+            android:id="@+id/chatUnreadCountTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/chatTv"
+            android:paddingStart="@dimen/grid_2x"
+            android:paddingEnd="@dimen/grid_2x"
+            android:layout_centerVertical="true"
+            android:background="@drawable/rounded_corner"
+            tool:text="10"
+            style="@style/Title"/>
+
+<!--            android:background="@color/transparent_light"-->
     <LinearLayout
             android:id="@+id/progressLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/transparent_light"
             android:elevation="5dp"
             android:gravity="center"
             android:orientation="vertical"

@@ -88,8 +88,10 @@ fun getApplicationName(context: Context): String? {
         else context.getString(stringId)
 }
 
+// Get rid of unnecessary characters in phone number to improve matches
 fun String.trimUnnecessaryPhoneCharacters(): String {
-    return this.replace("(", "")
+    return this.replace(
+        "(", "")
         .replace(")", "")
         .replace(" ", "")
         .replace("-", "")

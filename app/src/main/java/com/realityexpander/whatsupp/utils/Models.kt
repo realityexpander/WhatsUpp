@@ -29,6 +29,7 @@ data class Chat(
     val chatParticipants: ArrayList<UserId>
 )
 
+// For ChatListFragment
 data class ChatIdAndUnreadCount(
     val chatId: ChatId,
     var unreadChatCount: Int = 0
@@ -44,6 +45,7 @@ data class Message(
     val imageUrl: String? = ""
 )
 
+// For StatusListFragment
 data class StatusListItem(
     val username: String?,
     val profileImageUrl: String?,

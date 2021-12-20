@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.realityexpander.whatsupp.R
@@ -26,23 +27,22 @@ class ChatsAdapter(val chats: ArrayList<ChatIdAndUnreadCount>):
         private val firebaseDB = FirebaseFirestore.getInstance()
         private val userId = FirebaseAuth.getInstance().currentUser?.uid
         private var layout = view.findViewById<RelativeLayout>(R.id.chatLayout)
-        private var chatIv = view.findViewById<ImageView>(R.id.chatIv)
+        private var chatProfileImageIv = view.findViewById<ImageView>(R.id.chatProfileImageIv)
         private var chatNameTv = view.findViewById<TextView>(R.id.chatTv)
         private var chatUnreadCountTv = view.findViewById<TextView>(R.id.chatUnreadCountTv)
+        private var unreadCountCv = view.findViewById<MaterialCardView>(R.id.unreadCountCv)
         private var progressLayout = view.findViewById<LinearLayout>(R.id.progressLayout)
         private var partnerId: String? = null
         private var chatPartnerProfileImageUrl: String? = null
         private var chatPartnerUsername: String? = null
 
         @SuppressLint("ClickableViewAccessibility") // for progressLayout event trapper
-//        fun bind(chatId: ChatId, listener: ChatsClickListener?) {
         fun bind(chat: ChatIdAndUnreadCount, listener: ChatsClickListener?) {
             progressLayout.visibility = View.VISIBLE
             progressLayout.setOnTouchListener { _, _ -> true /* do nothing */  }
 
             // Fill in partnerId data for this chatId
             firebaseDB.collection(DATA_CHATS_COLLECTION)
-//                .document(chatId)
                 .document(chat.chatId)
                 .get()
                 .addOnSuccessListener { chatDocument ->
@@ -64,7 +64,7 @@ class ChatsAdapter(val chats: ArrayList<ChatIdAndUnreadCount>):
                                         chatPartnerProfileImageUrl = user?.profileImageUrl
                                         chatPartnerUsername = user?.username
                                         chatNameTv.text = user?.username
-                                        chatIv.loadUrl(user?.profileImageUrl, R.drawable.default_user)
+                                        chatProfileImageIv.loadUrl(user?.profileImageUrl, R.drawable.default_user)
                                         progressLayout.visibility = View.GONE
                                     }
                                     .addOnFailureListener { e ->
@@ -81,15 +81,14 @@ class ChatsAdapter(val chats: ArrayList<ChatIdAndUnreadCount>):
                 }
 
             if(chat.unreadChatCount > 0) {
-                chatUnreadCountTv.visibility = View.VISIBLE
+                unreadCountCv.visibility = View.VISIBLE
                 chatUnreadCountTv.text = chat.unreadChatCount.toString()
             } else {
-                chatUnreadCountTv.visibility = View.INVISIBLE
+                unreadCountCv.visibility = View.INVISIBLE
             }
 
             // Navigate the the Chat for this partner
             layout.setOnClickListener {
-//                listener?.onChatItemClicked(chatId, partnerId, chatPartnerProfileImageUrl, chatPartnerUsername)
                 listener?.onChatItemClicked(chat.chatId, partnerId, chatPartnerProfileImageUrl, chatPartnerUsername)
             }
         }
@@ -103,7 +102,6 @@ class ChatsAdapter(val chats: ArrayList<ChatIdAndUnreadCount>):
         holder.bind(chats[position], clickListener)
     }
 
-//    fun updateChats(updatedChats: ArrayList<ChatId>) {
     fun updateChats(updatedChats: ArrayList<ChatIdAndUnreadCount>) {
         chats.clear()
         chats.addAll(updatedChats)

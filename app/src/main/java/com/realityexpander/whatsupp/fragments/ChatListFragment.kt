@@ -107,7 +107,6 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
             .addOnSuccessListener { userDocument ->
                 if (userDocument.contains(DATA_USER_CHATS)) {
                     val partnerChatIds = userDocument[DATA_USER_CHATS]
-//                    val chats = arrayListOf<ChatId>()
                     val chats = arrayListOf<ChatIdAndUnreadCount>()
                     if(shouldRefreshUpdateListeners) removeAllUpdateListeners()
 
@@ -121,7 +120,7 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
                         // setup Listeners for changes to partners status changes
                         if (shouldRefreshUpdateListeners) {
 
-                            // Partner Status listener
+                            // Setup Partner Status listener
                             val partnerStatusListener =
                                 firebaseDB.collection(DATA_USERS_COLLECTION)
                                     .document(partnerId)
@@ -132,7 +131,7 @@ class ChatListFragment : BaseFragment(), ChatsClickListener, UpdateUIExternally 
                                     }
                             partnerStatusListenerSet.add(partnerStatusListener)
 
-                            // Unread Chat Count listener
+                            // Setup Unread Chat Count listener
                             val unreadChatListener = firebaseDB.collection(DATA_CHATS_COLLECTION)
                                 .document(partnerChatIds[partnerId]!!)
                                 .collection(DATA_CHAT_MESSAGES_COLLECTION)

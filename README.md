@@ -13,4 +13,5 @@ WhatsApp clone for Android. Uses Firebase backend. Real time messaging.
 - Uses Firebase FireStore for storing images
 - Uses Firbase Authentication for registering users
 
-- Uses Activities, Fragments, Tabs, Image Gallery, SMS
+- Uses Activities, Fragments, Tabs, Image Gallery, SMS, Contact Provider
+- Coroutines

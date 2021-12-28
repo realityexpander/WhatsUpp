@@ -38,6 +38,10 @@ import com.realityexpander.whatsupp.utils.*
 // Storage: https://console.firebase.google.com/u/2/project/whatsupp-zapr/storage/whatsupp-zapr.appspot.com/files/~2FprofileImageUrl
 // Extras: https://devupskill.net/lessons/main-screen-pager-layout/
 
+// Add Cloudinary API for photos:
+// https://cloudinary.com/console/c-bd6e4413cbeb3eda56b16139b926ee/getting-started
+
+
 class MainActivity : AppCompatActivity(),
     UserNotLoggedInError,
     HostContextI
